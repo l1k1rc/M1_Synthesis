@@ -1,0 +1,39 @@
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 12/16/19
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+set timeout 30
+set password "admin"
+
+spawn ssh -c aes192-cbc admin@192.168.1.1
+
+while {1} {
+	expect {
+		"*assword: " { 
+			puts -nonewline "\033\[1;32m"; #GREEN
+			puts "\nSending password...\n"
+			puts "\033\[0m"; #Reset
+			send "$password\r"
+		}
+		"*>" { 
+			puts -nonewline "\033\[1;32m"; #GREEN
+			puts "\nAuthentification succeed"
+			puts "\033\[0m"; #Reset
+			break
+		}
+		"Wrong password" {
+			close
+			puts -nonewline "\033\[1;31m"; #RED
+			puts "\n\nToo much attempts... Connexion closed.\n"
+			puts "\033\[0m"; #Reset
+			exit		
+		}
+	}
+}
+

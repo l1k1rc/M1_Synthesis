@@ -1,0 +1,56 @@
+#!/usr/bin/expect -f
+
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 12/16/19
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+set port_nbr 0
+set port_nbr [lindex $argv 0]
+
+source ./ssh_connection
+source ./admin_mode
+
+send "config\r"
+
+expect "*onfiguring from terminal, memory, or network *? "
+
+send "ter\r"
+
+expect "*(config)#"
+
+if { $port_nbr > 0 } {
+	send "interface gi1/0/$port_nbr\r"
+	expect "*(config-if)#"
+	puts -nonewline "\033\[1;32m"; #GREEN
+	puts "\nDisabeling poe port $port_nbr..."
+	puts "\033\[0m"; #Reset
+	send "shutdown\r"
+	expect "*(config-if)#"
+} else {
+    puts -nonewline "\033\[1;32m"; #GREEN
+	puts "\nDisabeling every poe ports..."
+	puts "\033\[0m"; #Reset
+	for {set x 1} {$x<13} {incr x 1} {
+		send "interface gi1/0/$x\r"
+		expect "*(config-if)#"
+        puts -nonewline "\033\[1;32m"; #GREEN
+		puts "\nDisabeling poe port $x..."
+		puts "\033\[0m"; #Reset
+		send "shutdown\r"
+		expect "*(config-if)#"
+	}
+}
+
+send "end\r"
+
+expect "*#"
+
+source ./unconnection
+
+expect eof

@@ -1,0 +1,24 @@
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 12/16/19
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+set admin_password "admin"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nAdmin mode enabeling..."
+puts "\033\[0m"; #Reset
+
+send "ena\r"
+ 
+expect "*assword: "
+
+send "$admin_password\r"
+
+
+expect "*#"
