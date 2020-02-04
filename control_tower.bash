@@ -30,6 +30,7 @@ do
 (2) Show interface status
 (3) Enable poe port
 (4) Disable poe port
+(5) Show mac address
 (0) Quit"
 	read
 	case $REPLY in
@@ -66,6 +67,9 @@ Which port would you disable (between 1 and 12) ?
 		   else
 			   echo "Wrong entry..."
 		   fi
+			;;
+		5) echo "expect show_mac_address"
+				 expect show_mac_address
 			;;
 		0) echo "Quitting..."
 			run=0
