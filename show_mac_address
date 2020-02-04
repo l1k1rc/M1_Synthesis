@@ -1,0 +1,28 @@
+#!/usr/bin/expect -f
+
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 04/02/20
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+source ./ssh_connection
+source ./admin_mode
+
+send "show mac address-table\r"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nDisplaying address table...\n"
+puts "\033\[0m"; #Reset
+
+send "\r\r\r"
+
+expect "*#"
+
+source ./unconnection
+
+expect eof
