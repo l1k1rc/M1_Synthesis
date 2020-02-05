@@ -33,6 +33,7 @@ do
 (5) Enable poe port
 (6) Disable poe port
 (7) Add vlan
+(8) Delete vlan
 
 (0) Quit"
 	read
@@ -89,6 +90,10 @@ Which port would you disable (between 1 and 12) ?
 		   else
 		       echo "Wrong entry..."
 		   fi
+			;;
+		8) 	echo "Which port would you delete ?"
+			read
+			expect delete_vlan $REPLY
 			;;
 		0) echo "Quitting..."
 			run=0
