@@ -1,0 +1,61 @@
+#!/usr/bin/expect -f
+
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 02/04/20
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+set vlan_connected [lindex $argv 0]
+set vlan_unconnected [lindex $argv 1]
+
+source ./ssh_connection
+source ./admin_mode
+
+send "config\r"
+
+expect "*onfiguring from terminal, memory, or network *? "
+
+send "ter\r"
+
+expect "*(config)#"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nCreation of vlan $vlan_connected named connected_pole"
+puts "\033\[0m"; #Reset
+
+send "vlan $vlan_connected\r"
+
+expect "*(config-vlan)#"
+
+send "name connected_pole\r"
+
+expect "*(config-vlan)#"
+
+send "exit\r"
+
+expect "*(config)#"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nCreation of vlan $vlan_unconnected named unconnected_pole"
+puts "\033\[0m"; #Reset
+
+send "vlan $vlan_unconnected\r"
+
+expect "*(config-vlan)#"
+
+send "name unconnected_pole\r"
+
+expect "*(config-vlan)#"
+
+send "end\r"
+
+expect "*#"
+
+source ./unconnection
+
+expect eof
