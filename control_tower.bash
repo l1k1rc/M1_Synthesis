@@ -83,7 +83,7 @@ Which port would you disable (between 1 and 12) ?
 		   echo "Which vlan number would you assign to disconnected area ?" 
 		   read
 		   disconnected_area=$REPLY
-           if [[ "$connected_area" -ge "1" && "$disconnected_area" -ge "1" ]]; then
+           if [[ "$connected_area" -gt "1" && "$disconnected_area" -gt "1" ]]; then
 		       echo "expect create_vlan"
 			   expect create_vlan $connected_area $disconnected_area
 		   else
