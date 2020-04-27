@@ -19,7 +19,7 @@ puts -nonewline "\033\[1;32m"; #GREEN
 puts "\nDisplaying address table...\n"
 puts "\033\[0m"; #Reset
 
-send "\r\r\r\r\r\r\r\r\r\r\r\r"
+send "\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r"
 
 expect "*#"
 
