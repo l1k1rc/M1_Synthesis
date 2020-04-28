@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-category_names = ['Sg1','Sg1','Sg1','Sg1','Sg1','Sg1','Sg1','Sg1','Sg1','Sg1' ]
+category_names = ['1','2','3','4','5','6','7','8','9','10' ]
 results = {
-    'Nombre de bornes': [18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
+    [18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
 }
 
 
@@ -18,14 +18,13 @@ def survey(results, category_names):
     category_names : list of str
         The category labels.
     """
-    labels = list(results.keys())
     data = np.array(list(results.values()))
     data_cum = data.cumsum(axis=1)
     category_colors = plt.get_cmap('RdYlGn')(
         np.linspace(0.15, 0.85, data.shape[1]))
 
     fig, ax = plt.subplots(figsize=(9.2, 5))
-    ax.invert_yaxis()
+
     ax.xaxis.set_visible(True)
     ax.set_xlim(0, np.sum(data, axis=1).max())
 
@@ -43,9 +42,9 @@ def survey(results, category_names):
                     color=text_color)
     ax.legend(ncol=len(category_names), bbox_to_anchor=(0, 1),
               loc='lower left', fontsize='small')
-
+    plt.axhline(y=0, xmin=0.5, xmax=3.5)
+    plt.savefig('foo.png', bbox_inches='tight')
     return fig, ax
-
 
 survey(results, category_names)
 plt.show()
