@@ -115,7 +115,7 @@ plt.plot(df_log_shift)
 plt.plot(results.fittedvalues, color='red')
 plt.show()
 
-fig = results.plot_predict(1, 600)
+fig = results.plot_predict(1, 900)
 plt.figure(num=None, figsize=(19, 7), dpi=80, facecolor='w', edgecolor='k')
 plt.show()
 '''
