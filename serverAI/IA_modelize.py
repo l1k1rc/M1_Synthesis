@@ -15,29 +15,33 @@ class Style:
     UNDERLINE = '\033[4m'
 
 
-def convertToSQL(str, csv_file, tableName):
+def convertToSQL(list, csv_file):
     # Open database connection
     db = pymysql.connect("localhost", "l1k1", "raccoon", "projetM1")
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
     # execute SQL query using execute() method.
-    cursor.execute("LOAD DATA LOCAL INFILE '" + csv_file + "' INTO TABLE " + tableName + " " +
-                   "FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\n'" +
-                   "(total_rev,monthly_rev,day_rev)")
+    print(("LOAD DATA LOCAL INFILE '" + str(csv_file) + "' INTO TABLE csv_data " +
+                   "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'" +
+                   " ("+str(list[0])+","+str(list[1])+","+str(list[2])+")"))
+    cursor.execute("LOAD DATA LOCAL INFILE '" + csv_file + "' INTO TABLE csv_data " +
+                   "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'" +
+                   " ("+list[0]+","+list[1]+","+list[2]+")")
     db.close()
 
-
-def createTable(list, tableName):
+    LOAD DATA INFILE '/tmp/db.txt'
+       INTO TABLE test FIELDS TERMINATED BY ','
+       OPTIONALLY ENCLOSED BY '"'
+       IGNORE 1 LINES (id, mycol1, mycol2);
+def createTable():
     # Open database connection
     db = pymysql.connect("localhost", "l1k1", "raccoon", "projetM1")
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
     # execute SQL query using execute() method.
-    cursor.execute('CREATE TABLE csv_data (' +
-                   'time DATETIME,' +
-                   'mac_address VARCHAR(100)' +
-                   'vendor VARCHAR(100)' +
-                   'ssid VARCHAR(100)')
+    cursor.execute('DROP TABLE csv_data;')
+    cursor.execute('CREATE TABLE csv_data (time DATETIME, mac_address VARCHAR(100), ssid_data VARCHAR(100));')
+
     # Fetch a single row using fetchone() method.
     # data = cursor.fetchone()
     # print("Database version : %s " % data)
@@ -53,33 +57,34 @@ def isColumnsFromCSV(CSVfile, columns):
         for row in reader:
             csv_columns.append(row)
             break
+
     for col in columns:
-        print(any(ele in csv_columns[0] for ele in col))
+        print(any(col in s for s in csv_columns[0]))
 
 
-test_string = "There are 2 apples for 4 persons"
+def display_columnsCSV(file):
+    csv_columns = []
+    with open(file, newline='') as f:
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        for row in reader:
+            csv_columns.append(row)
+            break
+    print(Style.BOLD + Style.OKBLUE + str(csv_columns[0]) + Style.ENDC)
 
-# initializing test list
-test_list = ['apples', 'oranges']
-
-# printing original string
-print("The original string : " + test_string)
-
-# printing original list
-print("The original list : " + str(test_list))
-
-# using list comprehension
-# checking if string contains list element
-res = any(ele in test_string for ele in test_list)
 
 Tk().withdraw()
-filename = askopenfilename()
+filename = askopenfilename(title="Select CSV logs file :",
+                           filetypes=(("CSV files", "*.csv"), ("all files", "*.*")))
 columns = []
-print(filename)
-print("Write the column name corresponding to the" + Style.BOLD + "datetime : " + Style.ENDC)
+print("File choosen :\n"+filename)
+display_columnsCSV(filename)
+# 1 = datetime, 2 = MAC Address, 3 = SSID
+print("Write the column name corresponding to the" + Style.BOLD + Style.OKGREEN + " datetime : " + Style.ENDC)
 columns.append(input())
-print("Write the column name corresponding to the" + Style.BOLD + "MAC address : " + Style.ENDC)
+print("Write the column name corresponding to the" + Style.BOLD + Style.OKGREEN + " MAC address : " + Style.ENDC)
 columns.append(input())
-print("Write the column name corresponding to the" + Style.BOLD + "SSID : " + Style.ENDC)
+print("Write the column name corresponding to the" + Style.BOLD + Style.OKGREEN + " SSID : " + Style.ENDC)
 columns.append(input())
-isColumnsFromCSV('test', columns)
+isColumnsFromCSV(filename, columns)
+createTable()
+convertToSQL(columns,filename)

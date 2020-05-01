@@ -1,0 +1,66 @@
+import \
+    mysql.connector  # pip search mysql-connector | grep --color mysql-connector-pytho | pip install mysql-connector-python (get the last one)
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from pandas.plotting import register_matplotlib_converters
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="l1k1",
+    passwd="raccoon",
+    database="projetM1"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT time, count(*) as NUM FROM csv_data GROUP BY time LIMIT 500")
+result_set = mycursor.fetchall()
+time=[]
+user=[]
+dt=[]
+for row in result_set:
+    dt.append(row)
+    #print("%s, %s" % (row[0], row[1]))
+    #user.append(row[1])
+    #time.append(row[0])
+
+df = pd.DataFrame(dt)
+df=df.applymap(str)
+df.to_csv('../data/new_.csv', index=False, header=True)
+print(df)
+
+register_matplotlib_converters()
+df = pd.read_csv('../data/new_.csv', parse_dates=['0'], index_col=['0'])
+plt.figure(num=None, figsize=(19, 7), dpi=80, facecolor='w', edgecolor='k')
+print(df.head())
+plt.xlabel('Date')
+plt.ylabel('Nombre d\'utilisateur')
+plt.plot(df)
+plt.show()
+
+# graphics method
+plt.figure(num=None, figsize=(19, 7), dpi=80, facecolor='w', edgecolor='k')
+rolling_mean = df.rolling(window=12).mean()
+rolling_std = df.rolling(window=12).std()
+plt.plot(df, color='blue', label='Origine')
+plt.plot(rolling_mean, color='red', label='Moyenne mobile')
+plt.plot(rolling_std, color='black', label='Ecart-type mobile')
+plt.legend(loc='best')
+plt.title('Moyenne et Ecart-type mobiles')
+plt.show()
+'''
+#df = pd.read_csv('../data/airline_passengers.csv', parse_dates=['Month'], index_col=['Month'])
+#df.head()
+#print(df)
+
+#y.plot(x=0,y=1,kind='line', linewidth=3,figsize=(19,7))
+#plt.title('Observations', fontsize=22, fontweight="bold")
+#plt.xlabel('Temps (h)', fontsize=18)
+#plt.ylabel('Nombre d\'utilisateurs', fontsize=18)
+
+#plt.tight_layout()
+plt.xlabel('Date')
+plt.ylabel('Nombre de passagers aériens')
+plt.plot(df)
+plt.show()'''
