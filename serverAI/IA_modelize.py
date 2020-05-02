@@ -29,10 +29,10 @@ def convertToSQL(list, csv_file):
                    " ("+list[0]+","+list[1]+","+list[2]+")")
     db.close()
 
-    LOAD DATA INFILE '/tmp/db.txt'
-       INTO TABLE test FIELDS TERMINATED BY ','
-       OPTIONALLY ENCLOSED BY '"'
-       IGNORE 1 LINES (id, mycol1, mycol2);
+''' LOAD DATA INFILE '/tmp/db.txt'
+    INTO TABLE test FIELDS TERMINATED BY ','
+     OPTIONALLY ENCLOSED BY '"'
+     IGNORE 1 LINES (id, mycol1, mycol2);'''
 def createTable():
     # Open database connection
     db = pymysql.connect("localhost", "l1k1", "raccoon", "projetM1")

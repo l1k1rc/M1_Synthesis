@@ -59,8 +59,8 @@ def preparation_data(data, lags=1):
     return np.array(X), np.array(y)
 
 
-train = ts[0:190]
-test = ts[190:]
+train = ts[0:250]
+test = ts[250:]
 lags = 10
 X_train, y_train = preparation_data(train, lags)
 X_test, y_test = preparation_data(test, lags)
@@ -80,11 +80,11 @@ test_predict = mdl.predict(X_test)
 
 train_predict_plot = np.empty_like(ts)
 train_predict_plot[:, ] = np.nan
-train_predict_plot[lags: len(train_predict) + lags, ] = train_predict.reshape(179, )
+train_predict_plot[lags: len(train_predict) + lags, ] = train_predict.reshape(239, )
 
 test_predict_plot = np.empty_like(ts)
 test_predict_plot[:, ] = np.nan
-test_predict_plot[len(train_predict) + (lags * 2) + 1:len(ts) - 1, ] = test_predict.reshape(299,)
+test_predict_plot[len(train_predict) + (lags * 2) + 1:len(ts) - 1, ] = test_predict.reshape(239,)
 
 fig = plt.figure(figsize=(19, 7))
 ax = fig.add_subplot(111)
