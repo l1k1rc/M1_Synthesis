@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from keras.layers import Dense
 from keras.models import Sequential
-
+#pip install -U protobuf==3.8.0 ================= pour tensorflow
 mydb = mysql.connector.connect(
     host="localhost",
     user="l1k1",
@@ -17,7 +17,7 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute("SELECT time, count(*) as NUM FROM csv_data GROUP BY time LIMIT 500")
+mycursor.execute("SELECT time, count(*) as NUM FROM csv_data GROUP BY time LIMIT 200")
 result_set = mycursor.fetchall()
 time = []
 user = []
@@ -58,9 +58,9 @@ def preparation_data(data, lags=1):
         y.append(data[row + lags])
     return np.array(X), np.array(y)
 
-
-train = ts[0:250]
-test = ts[250:]
+print(ts)
+train = ts[0:75]
+test = ts[75:]
 lags = 10
 X_train, y_train = preparation_data(train, lags)
 X_test, y_test = preparation_data(test, lags)
@@ -80,16 +80,16 @@ test_predict = mdl.predict(X_test)
 
 train_predict_plot = np.empty_like(ts)
 train_predict_plot[:, ] = np.nan
-train_predict_plot[lags: len(train_predict) + lags, ] = train_predict.reshape(239, )
+train_predict_plot[lags: len(train_predict) + lags, ] = train_predict.reshape(64, )
 
 test_predict_plot = np.empty_like(ts)
 test_predict_plot[:, ] = np.nan
-test_predict_plot[len(train_predict) + (lags * 2) + 1:len(ts) - 1, ] = test_predict.reshape(239,)
+test_predict_plot[len(train_predict) + (lags * 2) + 1:len(ts) - 1, ] = test_predict.reshape(114,)
 
 fig = plt.figure(figsize=(19, 7))
 ax = fig.add_subplot(111)
 ax.plot(y[0:], color='#006699', linewidth=3, label='Observation');
-df_pred = pd.Series(pd.DataFrame(test_predict_plot).dropna().values.reshape(500,),
+df_pred = pd.Series(pd.DataFrame(test_predict_plot).dropna().values.reshape(200,),
                     pd.DataFrame(test_predict_plot).dropna().index)
 df_pred.plot(ax=ax, linewidth=3, linestyle='-', label='Prediction', alpha=.7, color='#ff5318', fontsize=18);
 ax.fill_betweenx(ax.get_ylim(), 200, y.index[-1], alpha=.3, zorder=-1, color='pink');

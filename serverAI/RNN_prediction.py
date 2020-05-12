@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+#pip install -U protobuf==3.8.0 ================= pour tensorflow
 
 df = pd.read_csv('../data/transaction_data.csv', sep=',', parse_dates=True)
 data = df.values

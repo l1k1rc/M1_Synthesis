@@ -5,25 +5,36 @@ These segments are defined according to the maximum capacities of the access poi
 function, to determine the number of access points required for a given configuration. '''
 
 
-def calc_heuristic(param1, param2):
-    return 0.6 * param1 + 0.4 * param2
-
-
 class Interval:
-    def __init__(self, minA, maxB):
-        self.min = minA
-        self.max = maxB
+    def __init__(self, nbAP, maxClient, maxBandwidth):
+        self.ap = nbAP
+        self.client = maxClient
+        self.bandwidth = maxBandwidth
         self.listOfSegment = []
+        self.maxIter = 0
 
     def addSegment(self, fromA, toB):
-        if fromA == self.min:
-            tmp = P.closed(fromA, toB)
-        else:
-            tmp = P.openclosed(fromA, toB)
+        tmp = P.open(fromA, toB)
         self.listOfSegment.append(tmp)
 
-    def getListOfSegment(self):
+    def build(self):
+        for i in range(1, self.ap+1):
+            print("Minumum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
+            print("Maximum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * i))
+            self.listOfSegment.append(P.open(self.maxIter * (i - 1), self.maxIter * i))
+
+    def config(self):
+        self.maxIter = 0.6 * self.client + 0.4 * self.bandwidth
+        print("Segment created : l = " + str(self.maxIter))
+
+    def getListOfSegm(self):
         return self.listOfSegment
+
+    def expect(self,value):
+        for s in self.listOfSegment:
+            if value in s:
+                return self.listOfSegment.index(s)+1
+
 
 
 # nb de borne +  capacité
@@ -33,8 +44,8 @@ capacity_client_per_AP = 20
 nbr_client = 4
 bandwith = 20
 heuritic = 0.6 * nbr_client + 0.4 * bandwith
-interval1 = Interval(0, 20)
-interval1.addSegment(1, 3)
-interval1.addSegment(2, 6)
-print(interval1.getListOfSegment())
-print(calc_heuristic(nbr_client,bandwith))
+interval1 = Interval(nbrOfAP, capacity_client_per_AP, capacity_bandwith_per_AP)
+interval1.config()
+interval1.build()
+print(interval1.getListOfSegm())
+print(interval1.expect(80.16))
