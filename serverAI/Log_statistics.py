@@ -59,14 +59,37 @@ def count_days_rows(date_min, date_max):
 
 
 def count_rows_between_hours(date_min, date_max):
-    print(date_min)
-    print(date_max)
     # Open database connection
     db = pymysql.connect("localhost", "admin", "admin", "smartwifi")
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
     cursor.execute("SELECT COUNT(*) FROM csv_data WHERE time >= \'" + str(date_min) + "\' AND time <= \'" + str(date_max) + "\'")
     return cursor.fetchone()[0]
+
+def list_clients_between_dates(date_min, date_max):
+    clients = []
+    # Open database connection
+    db = pymysql.connect("localhost", "admin", "admin", "smartwifi")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM csv_data WHERE time >= \'" + str(date_min) + "\' AND time <= \'" + str(date_max) + "\'")
+    return cursor.fetchall()
+
+
+def sort_list(log_list, column):
+    clients_array = [[]]
+    current_date = log_list[0][0]
+    clients_array_cursor = 0
+    for client in log_list:
+        if client[0] == current_date:
+            clients_array[clients_array_cursor].append(client)
+        else:
+            current_date = client[0]
+            clients_array_cursor += 1
+            clients_array.append([client])
+
+    return clients_array
+
 
 def average_log_rows(days_rows):
     all_rows = 0
@@ -97,4 +120,12 @@ def median_log_rows(days_rows):
 #median = median_log_rows(test_days_rows)
 #print("Médiane : " + str(median))
 
-print(count_rows_between_hours(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 9)))
+#print(count_rows_between_hours(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 9)))
+
+#list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 8))
+
+test_array = sort_list(list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 10)), 0)
+print(len(test_array))
+print(len(test_array[0]))
+print(len(test_array[1]))
+print(len(test_array[2]))
