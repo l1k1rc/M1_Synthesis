@@ -46,7 +46,7 @@ def saveAndConvert(data,name='new_3'):
     list = pd.DataFrame(data)
     list.to_csv('../data/new_3.csv', index=False, header=True)
     df = pd.read_csv('../data/new_3.csv', names=['value'], header=0)
-    print("Stationary data are : ",df)
+    #print("Stationary data are : ",df)
     return df
 
 def difference(dataset, interval=1):
@@ -77,111 +77,115 @@ df = pd.read_csv('../data/new_.csv', parse_dates=['0'], index_col=['0'])
 new_df = obtainExploitableData(df['1'].tolist())
 df = saveAndConvert(new_df)
 ############ Serie stationary ############
-
+df = pd.read_csv('https://raw.githubusercontent.com/selva86/datasets/master/wwwusage.csv', names=['value'], header=0)
 #If p-value is low, the serie is stationary
 result = adfuller(df.value.dropna())
 print('ADF Statistic: %f' % result[0])
 print('p-value: %f' % result[1])
 
-'''
-# Original Series
-fig, axes = plt.subplots(3, 2)
-axes[0, 0].plot(df.value)
-axes[0, 0].set_title('Original Series')
-plot_acf(df.value, ax=axes[0, 1])
+def findMATermsQ(dataframe):
+    fig, axes = plt.subplots(1, 2)
+    axes[0].plot(dataframe.value.diff())
+    axes[0].set_title('Graphics for Q terms')
+    axes[1].set(ylim=(0, 1.2))
+    plot_acf(dataframe.value.diff().dropna(), ax=axes[1])
 
-# 1st Differencing
-axes[1, 0].plot(df.value.diff());
-axes[1, 0].set_title('1st Order Differencing')
-plot_acf(df.value.diff().dropna(), ax=axes[1, 1])
+    plt.show()
 
-# 2nd Differencing
-axes[2, 0].plot(df.value.diff().diff());
-axes[2, 0].set_title('2nd Order Differencing')
-plot_acf(df.value.diff().diff().dropna(), ax=axes[2, 1])
+def findARTermsP(dataframe):
+    fig, axes = plt.subplots(1, 2)
+    axes[0].plot(dataframe.value.diff())
+    axes[0].set_title('Graphics for P terms')
+    axes[1].set(ylim=(0, 5))
+    plot_pacf(dataframe.value.diff().dropna(), ax=axes[1])
 
-plt.show()
+    plt.show()
 
-fig, axes = plt.subplots(1, 2)
-axes[0].plot(df.value.diff());
-axes[0].set_title('1st Differencing')
-axes[1].set(ylim=(0, 5))
-plot_pacf(df.value.diff().dropna(), ax=axes[1])
+def findDifferencingTermsD(dataframe):
+    # Original Series
+    fig, axes = plt.subplots(3, 2)
+    axes[0, 0].plot(dataframe.value)
+    axes[0, 0].set_title('Graphics for differencing terms')
+    plot_acf(dataframe.value, ax=axes[0, 1])
 
-plt.show()
+    # 1st Differencing
+    axes[1, 0].plot(dataframe.value.diff())
+    axes[1, 0].set_title('1st differencing')
+    plot_acf(dataframe.value.diff().dropna(), ax=axes[1, 1])
 
-fig, axes = plt.subplots(1, 2)
-axes[0].plot(df.value.diff());
-axes[0].set_title('1st Differencing')
-axes[1].set(ylim=(0, 1.2))
-plot_acf(df.value.diff().dropna(), ax=axes[1])
+    # 2nd Differencing
+    axes[2, 0].plot(dataframe.value.diff().diff())
+    axes[2, 0].set_title('2nd differencing')
+    plot_acf(dataframe.value.diff().diff().dropna(), ax=axes[2, 1])
 
-plt.show()
-# => d =1 et p=1'''
+    plt.show()
 
-# 1,1,1 ARIMA Model as q,d,p
-model = ARIMA(df.value, order=(6, 2, 3))
+findARTermsP(df)
+findMATermsQ(df)
+# 1,1,1 ARIMA Model as p,d,q
+# d = 0 s la série est déjà stationnaire besoin de# différenciation uniquement si la série
+# n'est pas stationnaire. Sinon, aucune différenciation n'est nécessaire
+# si p < 0.05 alors on peut dire que la série est staionnaire
+# si p > 0.05 alors il faut trouver un ordre de différenciation d
+
+
+# Enfin il faut trouver le nombre de terme AR = p en inspectant le tracé d'autocorrélation partielle (PACF).
+# PACF transmet en quelque sorte la corrélation pure entre un décalage et la série
+# Toute autocorrélation dans une série stationnaire peut être corrigée en ajoutant suffisamment de termes
+# AR. Donc, il faut prendre initialement l'ordre du terme AR comme étant égal à autant de retards qui
+# franchissent la limite de signification dans le tracé PACF
+
+# Un terme MA est techniquement, l'erreur de la prévision décalée.
+# L'ACF indique combien de termes MA sont nécessaires pour supprimer
+# toute autocorrélation dans la série stationnaire.
+# order = (AR,d,MA)
+model = ARIMA(df.value, order=(6, 0, 1))
 model_fit = model.fit(disp=0)
 print(model_fit.summary())
 
-# Actual vs Fitted
-model_fit.plot_predict(dynamic=False)
+
+residuals = pd.DataFrame(model_fit.resid)
+fig, ax = plt.subplots(1,2)
+residuals.plot(title="Residuals", ax=ax[0])
+residuals.plot(kind='kde', title='Density', ax=ax[1])
 plt.show()
 
+model_fit.plot_predict(dynamic=False)
+plt.show()
 '''
-
-
 @:train : 60% of total values
 @:test : rest of train => 40% of total values
-''''''
+'''
+
 # Create Training and Test
 train = df.value[:85]
 test = df.value[85:]
 
-# Build Model
-# model = ARIMA(train, order=(3,2,1))
-model = ARIMA(train, order=(3, 0, 2))#######################################################################################################
-fitted = model.fit(disp=0)
+###########################################################################################
 
-# Forecast
-fc, se, conf = fitted.forecast(15, alpha=0.05)  # 95% conf => niveau de prédiction reste 36 cas par rapport au [:XX]
+def build(p,d,q,val_forecast,train, test):
+    # Build Model
+    model = ARIMA(train, order=(p, d, q))
+    fitted = model.fit(disp=-1)
+    print(fitted.summary())
 
-# Make as pandas series
-fc_series = pd.Series(fc, index=test.index)
-lower_series = pd.Series(conf[:, 0], index=test.index)
-upper_series = pd.Series(conf[:, 1], index=test.index)
+    # Forecast
+    fc, se, conf = fitted.forecast(val_forecast, alpha=0.05)  # 95% conf
 
-# Plot
-plt.figure(figsize=(12, 5), dpi=100)
-plt.plot(train, label='training')
-plt.plot(test, label='actual')
-plt.plot(fc_series, label='forecast')
-plt.fill_between(lower_series.index, lower_series, upper_series,
-                 color='k', alpha=.15)
-plt.title('Forecast vs Actuals')
-plt.legend(loc='upper left', fontsize=8)
-plt.show()
+    # Make as pandas series
+    fc_series = pd.Series(fc, index=test.index)
+    lower_series = pd.Series(conf[:, 0], index=test.index)
+    upper_series = pd.Series(conf[:, 1], index=test.index)
 
-# Build Model
-model = ARIMA(train, order=(1, 0, 1))#######################################################################################################
-fitted = model.fit(disp=-1)
-print(fitted.summary())
+    # Plot
+    plt.figure(figsize=(12, 5), dpi=100)
+    plt.plot(train, label='training')
+    plt.plot(test, label='actual')
+    plt.plot(fc_series, label='forecast')
+    plt.fill_between(lower_series.index, lower_series, upper_series,
+                     color='k', alpha=.15)
+    plt.title('Forecast vs Actuals')
+    plt.legend(loc='upper left', fontsize=8)
+    plt.show()
 
-# Forecast
-fc, se, conf = fitted.forecast(15, alpha=0.05)  # 95% conf
-
-# Make as pandas series
-fc_series = pd.Series(fc, index=test.index)
-lower_series = pd.Series(conf[:, 0], index=test.index)
-upper_series = pd.Series(conf[:, 1], index=test.index)
-
-# Plot
-plt.figure(figsize=(12, 5), dpi=100)
-plt.plot(train, label='training')
-plt.plot(test, label='actual')
-plt.plot(fc_series, label='forecast')
-plt.fill_between(lower_series.index, lower_series, upper_series,
-                 color='k', alpha=.15)
-plt.title('Forecast vs Actuals')
-plt.legend(loc='upper left', fontsize=8)
-plt.show()'''
+build(1,2,1,15,train,test)
