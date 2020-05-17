@@ -1,5 +1,7 @@
 from datetime import datetime, date
 from statistics import median
+import matplotlib.pyplot as plt
+from minisom import MiniSom
 import pymysql
 
 months31 = (1, 3, 5, 7, 8, 10, 12)
@@ -109,6 +111,20 @@ def median_log_rows(days_rows):
     return rows_median
 
 
+def plt_data(array_data, scale):
+    time_array = []
+    nbr_array = []
+    for data in array_data:
+        # TODO: dynamique
+        time_array.append(data[0][0].minute)
+        #time_array.append(str(data[0][0]))
+        nbr_array.append(len(data))
+    plt.plot(time_array, nbr_array)
+    plt.xlabel("Time")
+    plt.ylabel("Users")
+    plt.title("Clients between " + str(array_data[0][0][0]) + " and " + str(array_data[len(array_data)-1][0][0]))
+    plt.show()
+
 #print(count_day_rows(date(2018, 3, 7)))
 #print(date(2018, 3, 7))
 #print(next_day(date(2021, 2, 28)))
@@ -124,8 +140,12 @@ def median_log_rows(days_rows):
 
 #list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 8))
 
-test_array = sort_list(list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 10)), 0)
-print(len(test_array))
-print(len(test_array[0]))
-print(len(test_array[1]))
-print(len(test_array[2]))
+#test_array = sort_list(list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 17, 10)), 0)
+#print(len(test_array))
+#print(test_array[0][0][0].minute)
+#print(len(test_array[1]))
+#print(len(test_array[2]))
+
+list = list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 18))
+sorted_list = sort_list(list, "minute")
+plt_data(sorted_list, 0)
