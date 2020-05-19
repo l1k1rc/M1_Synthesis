@@ -31,7 +31,7 @@ dttime.to_csv('../data/new_.csv', index=False, header=True)
 
 # register_matplotlib_converters()
 list_daf = []
-daf = pd.read_csv('../data/final.csv', parse_dates=['0'], index_col=['0'])
+daf = pd.read_csv('../data/final_ARIMA.csv', parse_dates=['0'], index_col=['0'])
 for val in daf['1']:
     list_daf.append(val)
 

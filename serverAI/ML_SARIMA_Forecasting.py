@@ -4,9 +4,9 @@ import warnings
 import matplotlib.pyplot as plt
 import \
     mysql.connector  # pip search mysql-connector | grep --color mysql-connector-pytho | pip install mysql-connector-python (get the last one)
+import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import numpy as np
 
 mydb = mysql.connector.connect(
     host="localhost",
@@ -43,6 +43,18 @@ print(ts)
 y = pd.DataFrame(ts)
 
 
+def simple_graphics(data):
+    fig = plt.figure(figsize=(19, 7))
+    ax = fig.add_subplot(111)
+    ax.plot(data[0:], color='#006699', linewidth=3, label='Observation')
+    ax.set_xlabel('Per minutes', fontsize=18)
+    ax.set_ylabel('Users', fontsize=18)
+    plt.legend(loc='upper left', prop={'size': 20})
+    plt.title('Prediction SARIMA', fontsize=22, fontweight="bold")
+    plt.savefig('../data/PredictionARIMA3.png')
+    plt.show()
+
+
 def hyperparameters_optimization(data):
     warnings.filterwarnings("ignore")
     p = d = q = range(0, 2)
@@ -72,8 +84,8 @@ def build_forecast(data, train_duration):
     # fit model to data
     forecastResult = {}
     res = sm.tsa.statespace.SARIMAX(data,
-                                    order=(0, 0, 1),
-                                    seasonal_order=(1, 1, 1, 12),
+                                    order=(1, 1, 1),
+                                    seasonal_order=(1, 1, 1, 24),
                                     enforce_stationarity=True,
                                     enforce_invertibility=True)
     results = res.fit(disp=0)
@@ -98,12 +110,10 @@ def build_forecast(data, train_duration):
     plt.show()
     line = ax.lines[0]
 
-
     return line.get_ydata()
 
-
-data = build_forecast(y, 100)
+simple_graphics(y)
+data = build_forecast(y, 120)
 print(data)
-print(np.array_split(data,4))
+print(np.array_split(data, 4))
 # hyperparameters_optimization(y)
-
