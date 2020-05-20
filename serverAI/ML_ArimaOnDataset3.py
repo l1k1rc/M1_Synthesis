@@ -157,6 +157,28 @@ def findARTermsP(dataframe):
     plt.show()
 
 
+def get_stationarity(timeseries):
+    # Statistiques mobiles
+    rolling_mean = timeseries.rolling(window=12).mean()
+    rolling_std = timeseries.rolling(window=12).std()
+
+    # tracé statistiques mobiles
+    original = plt.plot(timeseries, color='blue', label='Origine')
+    mean = plt.plot(rolling_mean, color='red', label='Moyenne Mobile')
+    std = plt.plot(rolling_std, color='black', label='Ecart-type Mobile')
+    plt.legend(loc='best')
+    plt.title('Moyenne et écart-type Mobiles')
+    plt.show(block=False)
+
+    # Test Dickey–Fuller :
+    result = adfuller(timeseries['User'])
+    print('Statistiques ADF : {}'.format(result[0]))
+    print('p-value : {}'.format(result[1]))
+    print('Valeurs Critiques :')
+    for key, value in result[4].items():
+        print('\t{}: {}'.format(key, value))
+
+
 def findDifferencingTermsD(dataframe):
     # Original Series
     fig, axes = plt.subplots(3, 2)
@@ -244,6 +266,6 @@ def build(p, d, q, val_forecast, train, test):
     plt.legend(loc='upper left', fontsize=8)
     plt.show()
 
-
-build(6, 1, 0, 24, train, test)
+get_stationarity(df)
+#build(6, 1, 0, 24, train, test)
 
