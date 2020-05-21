@@ -71,7 +71,7 @@ def obtainExploitableData(data):
 
 # Import data
 # df = pd.read_csv('../data/new_2.csv', names=['value'], header=0)
-df = pd.read_csv('../data/new_.csv', parse_dates=['0'], index_col=['0'])
+df = pd.read_csv('../data/final_ARIMA.csv', parse_dates=['0'], index_col=['0'])
 # Convert the data into an exploitable stationary serie
 new_df = obtainExploitableData(df['1'].tolist())
 df = saveAndConvert(new_df)
