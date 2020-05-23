@@ -2,7 +2,10 @@ import matplotlib.pyplot as plt
 import \
     mysql.connector  # pip search mysql-connector | grep --color mysql-connector-pytho | pip install mysql-connector-python (get the last one)
 import pandas as pd
+from pandas import read_csv
+from sklearn.metrics import mean_squared_error
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.arima_model import ARIMA
 # from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.stattools import adfuller  # to study a time serie
 
@@ -76,9 +79,6 @@ df = pd.read_csv('../data/final_ARIMA.csv', parse_dates=['0'], index_col=['0'])
 new_df = obtainExploitableData(df['1'].tolist())
 df = saveAndConvert(new_df)
 ################################################################
-from pandas import read_csv
-from statsmodels.tsa.arima_model import ARIMA
-from sklearn.metrics import mean_squared_error
 
 
 # evaluate an ARIMA model for a given order (p,d,q)
@@ -171,7 +171,7 @@ def get_stationarity(timeseries):
     plt.show(block=False)
 
     # Test Dickey–Fuller :
-    result = adfuller(timeseries['User'])
+    result = adfuller(timeseries['1'])
     print('Statistiques ADF : {}'.format(result[0]))
     print('p-value : {}'.format(result[1]))
     print('Valeurs Critiques :')
@@ -217,7 +217,7 @@ findMATermsQ(df)
 # L'ACF indique combien de termes MA sont nécessaires pour supprimer
 # toute autocorrélation dans la série stationnaire.
 # order = (AR,d,MA)
-model = ARIMA(df.value, order=(6, 1, 0))
+model = ARIMA(df.value, order=(9, 1, 3))
 model_fit = model.fit(disp=0)
 print(model_fit.summary())
 
@@ -266,6 +266,6 @@ def build(p, d, q, val_forecast, train, test):
     plt.legend(loc='upper left', fontsize=8)
     plt.show()
 
-get_stationarity(df)
-#build(6, 1, 0, 24, train, test)
 
+# get_stationarity(df)
+build(6, 1, 0, 24, train, test)
