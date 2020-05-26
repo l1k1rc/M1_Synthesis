@@ -37,7 +37,7 @@ class Interval:
 
 
 
-# nb de borne +  capacité
+'''# nb de borne +  capacité
 nbrOfAP = 5
 capacity_bandwith_per_AP = 50
 capacity_client_per_AP = 20
@@ -48,4 +48,4 @@ interval1 = Interval(nbrOfAP, capacity_client_per_AP, capacity_bandwith_per_AP)
 interval1.config()
 interval1.build()
 print(interval1.getListOfSegm())
-print(interval1.expect(80.16))
+print(interval1.expect(80.16))'''
