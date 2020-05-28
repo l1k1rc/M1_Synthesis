@@ -20,8 +20,9 @@ class Interval:
     def build(self):
         for i in range(1, self.ap+1):
             print("Minumum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
-            print("Maximum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * i))
+            print("Maximum value nb_ap : " + str(i) + " expected value :" + str(self.maxIter * i))
             self.listOfSegment.append(P.open(self.maxIter * (i - 1), self.maxIter * i))
+        print(self.listOfSegment)
 
     def config(self):
         self.maxIter = 0.6 * self.client + 0.4 * self.bandwidth
@@ -30,10 +31,13 @@ class Interval:
     def getListOfSegm(self):
         return self.listOfSegment
 
-    def expect(self,value):
+    def define(self, bandwidth, nbClient):
+        return 0.6 * nbClient + 0.4 * bandwidth
+
+    def expect(self, value):
         for s in self.listOfSegment:
             if value in s:
-                return self.listOfSegment.index(s)+1
+                return self.listOfSegment.index(s) + 1
 
 
 

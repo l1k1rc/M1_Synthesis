@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 import serverAI.IA_interval as heuristic
 
@@ -20,6 +19,16 @@ class Globalforecasting:
     def get_frct_nbClient(self, hour):
         return self.frct_nbClient[hour]
 
+    def addEnd(self, data):
+        self.mixresult.append(data)
+
+    def getMixresult(self):
+        return self.mixresult
+
+    def toString(self):
+        for v in self.mixresult:
+            print(v)
+
 
 class Forecasting:
     def __init__(self, nbAP, capacity_client_per_AP, capacity_bandwith_per_AP):
@@ -36,32 +45,32 @@ class Forecasting:
              "Sunday": Globalforecasting}
         )
 
-    def heuritic(self):
-        nbrOfAP = 5
-        interval1 = heuristic.Interval(nbrOfAP, self.capacity_client_per_AP, self.capacity_bandwith_per_AP)
-        interval1.config()
-        interval1.build()
-        print(interval1.getListOfSegm())
-        print(interval1.expect(80.16))
-
     def add(self, forecasting_bandnwidth, forecasting_nbClient, days_):
         for i in range(len(forecasting_bandnwidth)):
             self.daysD[days_] = Globalforecasting(forecasting_bandnwidth, forecasting_nbClient)
 
-    def graphics(self, data):
-        data =[4,6,7,8,9,4,5,8]
-        hour=range(len(data))
+    def predict(self, days_):
+        interval = heuristic.Interval(self.ap, self.client, self.bandwidth)
+        interval.config()
+        interval.build()
+        for i in range(23): #interval.expect(
+            self.daysD[days_].addEnd(interval.expect(
+                interval.define(self.daysD[days_].get_frct_nbClient(i), self.daysD[days_].get_frct_bandwidth(i))))
+
+    def graphics(self, days_):
+        hour = range(len(self.daysD[days_].getMixresult()))
         fig, ax = plt.subplots(figsize=(19, 8))
-        ax.bar(hour,data)
-        ax.set_xlabel('Smarts')
-        ax.set_ylabel('Probability density')
-        ax.set_title(r'Histogram of IQ: $\mu=100$, $\sigma=15$')
+        ax.bar(hour, self.daysD[days_].getMixresult())
+        ax.set_xlabel('Heures')
+        ax.set_ylabel('Nb. Points d\'accès')
+        ax.set_title('Nombre de borne WIFI idéal du '+days_)
         fig.tight_layout()
         plt.show()
 
-forecast = Forecasting(15,5,30)
+
+'''forecast = Forecasting(15,5,30)
 frct1=[4,6,7,9]
 frct2=[10,4,23,24]
 forecast.add(frct2,frct1,"Monday")
-print(forecast.daysD["Monday"].get_frct_nbClient(0))
-forecast.graphics(2)
+print(forecast.daysD["Monday"].get_frct_nbClient(0))#1h
+forecast.graphics(2)'''
