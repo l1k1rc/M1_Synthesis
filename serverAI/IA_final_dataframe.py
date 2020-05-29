@@ -63,7 +63,7 @@ class Forecasting:
         ax.bar(hour, self.daysD[days_].getMixresult())
         ax.set_xlabel('Heures')
         ax.set_ylabel('Nb. Points d\'accès')
-        ax.set_title('Nombre de borne WIFI idéal du '+days_)
+        ax.set_title('Nombre de bornes WIFI idéal du '+days_)
         fig.tight_layout()
         plt.show()
 
