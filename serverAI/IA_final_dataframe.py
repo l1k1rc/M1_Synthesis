@@ -2,9 +2,11 @@ import matplotlib.pyplot as plt
 
 import serverAI.IA_interval as heuristic
 
-'''This class allows to retrieve from the heuristic a dataframe which contains all informations about
+'''
+This class allows to retrieve from the heuristic a dataframe which contains all informations about
 the forecasting, where whe have for each line, a day in a week and a previsionnal number calculated
-by the heuristic which represent the number of access point we want for this hour of this day.'''
+by the heuristic which represent the number of access point we want for this hour of this day.
+'''
 
 
 class Globalforecasting:
@@ -30,6 +32,12 @@ class Globalforecasting:
             print(v)
 
 
+'''
+This class contains the previous object in the form of a dictionary. Its role is 
+to call the heuristic and store results.
+'''
+
+
 class Forecasting:
     def __init__(self, nbAP, capacity_client_per_AP, capacity_bandwith_per_AP):
         self.ap = nbAP
@@ -53,7 +61,7 @@ class Forecasting:
         interval = heuristic.Interval(self.ap, self.client, self.bandwidth)
         interval.config()
         interval.build()
-        for i in range(23): #interval.expect(
+        for i in range(23):  # interval.expect(
             self.daysD[days_].addEnd(interval.expect(
                 interval.define(self.daysD[days_].get_frct_nbClient(i), self.daysD[days_].get_frct_bandwidth(i))))
 
@@ -63,11 +71,11 @@ class Forecasting:
         ax.bar(hour, self.daysD[days_].getMixresult())
         ax.set_xlabel('Heures')
         ax.set_ylabel('Nb. Points d\'accès')
-        ax.set_title('Nombre de bornes WIFI idéal du '+days_)
+        ax.set_title('Nombre de bornes WIFI idéal du ' + days_)
         fig.tight_layout()
         plt.show()
 
-
+#Tests lines
 '''forecast = Forecasting(15,5,30)
 frct1=[4,6,7,9]
 frct2=[10,4,23,24]

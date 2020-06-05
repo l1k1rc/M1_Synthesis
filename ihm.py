@@ -64,7 +64,7 @@ canvasLog.config(yscrollcommand=scrollbar.set)
 
 Label(Frame3, text="Simulation").pack(side=TOP, padx=80, pady=20)
 
-img = ImageTk.PhotoImage(file="user.png")
+img = ImageTk.PhotoImage(file="data/PredictionRNN.png")
 canvasUser = tk.Canvas(Frame3, width=20, height=20)
 canvasUser.create_image(0, 0, anchor=tk.NW, image=img)
 canvasUser.pack()

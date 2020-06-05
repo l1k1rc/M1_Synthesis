@@ -16,23 +16,17 @@ class Style:
 
 
 def convertToSQL(list, csv_file):
-    # Open database connection
     db = pymysql.connect("localhost", "l1k1", "raccoon", "projetM1")
-    # prepare a cursor object using cursor() method
     cursor = db.cursor()
-    # execute SQL query using execute() method.
     print(("LOAD DATA LOCAL INFILE '" + str(csv_file) + "' INTO TABLE csv_data " +
-                   "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'" +
-                   " ("+str(list[0])+","+str(list[1])+","+str(list[2])+")"))
+           "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'" +
+           " (" + str(list[0]) + "," + str(list[1]) + "," + str(list[2]) + ")"))
     cursor.execute("LOAD DATA LOCAL INFILE '" + csv_file + "' INTO TABLE csv_data " +
                    "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'" +
-                   " ("+list[0]+","+list[1]+","+list[2]+")")
+                   " (" + list[0] + "," + list[1] + "," + list[2] + ")")
     db.close()
 
-''' LOAD DATA INFILE '/tmp/db.txt'
-    INTO TABLE test FIELDS TERMINATED BY ','
-     OPTIONALLY ENCLOSED BY '"'
-     IGNORE 1 LINES (id, mycol1, mycol2);'''
+
 def createTable():
     # Open database connection
     db = pymysql.connect("localhost", "l1k1", "raccoon", "projetM1")
@@ -76,7 +70,7 @@ Tk().withdraw()
 filename = askopenfilename(title="Select CSV logs file :",
                            filetypes=(("CSV files", "*.csv"), ("all files", "*.*")))
 columns = []
-print("File choosen :\n"+filename)
+print("File choosen :\n" + filename)
 display_columnsCSV(filename)
 # 1 = datetime, 2 = MAC Address, 3 = SSID
 print("Write the column name corresponding to the" + Style.BOLD + Style.OKGREEN + " datetime : " + Style.ENDC)
@@ -87,4 +81,4 @@ print("Write the column name corresponding to the" + Style.BOLD + Style.OKGREEN 
 columns.append(input())
 isColumnsFromCSV(filename, columns)
 createTable()
-convertToSQL(columns,filename)
+convertToSQL(columns, filename)

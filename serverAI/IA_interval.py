@@ -1,8 +1,10 @@
 import portion as P
 
-'''This class allows to manage a certain number of segments equal to the number of wifi terminals present in the system. 
+'''
+This class allows to manage a certain number of segments equal to the number of wifi terminals present in the system. 
 These segments are defined according to the maximum capacities of the access point and allow, thanks to an evaluation 
-function, to determine the number of access points required for a given configuration. '''
+function, to determine the number of access points required for a given configuration. 
+'''
 
 
 class Interval:
@@ -40,7 +42,7 @@ class Interval:
                 return self.listOfSegment.index(s) + 1
 
 
-
+#test lines
 '''# nb de borne +  capacité
 nbrOfAP = 5
 capacity_bandwith_per_AP = 50

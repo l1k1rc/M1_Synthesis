@@ -38,7 +38,6 @@ dttime.to_csv('../data/new_.csv', index=False, header=True)
 plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 250})
 
 
-############ Make the serie stationnary ############
 def saveAndConvert(data, name='new_3'):
     list = pd.DataFrame(data)
     list.to_csv('../data/new_3.csv', index=False, header=True)
@@ -60,25 +59,20 @@ def inverse_difference(last_ob, value):
 
 
 def obtainExploitableData(data):
-    # print(df['1'].tolist())
-    # define a dataset with a linear trend
     print(data)
-    # difference the dataset
     diff = difference(data)
     print(diff)
-    # invert the difference
     inverted = [inverse_difference(data[i], diff[i]) for i in range(len(diff))]
     print(inverted)
     return inverted
 
+################################################################
 
-# Import data
 # df = pd.read_csv('../data/new_2.csv', names=['value'], header=0)
 df = pd.read_csv('../data/final_ARIMA.csv', parse_dates=['0'], index_col=['0'])
 # Convert the data into an exploitable stationary serie
 new_df = obtainExploitableData(df['1'].tolist())
 df = saveAndConvert(new_df)
-################################################################
 
 
 # evaluate an ARIMA model for a given order (p,d,q)
@@ -118,8 +112,6 @@ def evaluate_models(dataset, p_values, d_values, q_values):
     print('Best ARIMA%s MSE=%.3f' % (best_cfg, best_score))
 
 
-# load dataset
-df = read_csv('../data/final_ARIMA.csv', header=0, index_col=0, names=['value'])
 # evaluate parameters
 print(df.value)
 p_values = [0, 1, 2, 4, 6, 8, 10]
@@ -158,15 +150,11 @@ def findARTermsP(dataframe):
 
 
 def get_stationarity(timeseries):
-    # Statistiques mobiles
     rolling_mean = timeseries.rolling(window=12).mean()
     rolling_std = timeseries.rolling(window=12).std()
-
-    # tracé statistiques mobiles
-    original = plt.plot(timeseries, color='blue', label='Origine')
-    mean = plt.plot(rolling_mean, color='red', label='Moyenne Mobile')
-    std = plt.plot(rolling_std, color='black', label='Ecart-type Mobile')
-    plt.legend(loc='best')
+    plt.plot(timeseries, color='blue', label='Origine')
+    plt.plot(rolling_mean, color='red', label='Moyenne Mobile')
+    plt.plot(rolling_std, color='black', label='Ecart-type Mobile')
     plt.title('Moyenne et écart-type Mobiles')
     plt.show(block=False)
 
@@ -207,15 +195,12 @@ findMATermsQ(df)
 # si p < 0.05 alors on peut dire que la série est staionnaire
 # si p > 0.05 alors il faut trouver un ordre de différenciation d
 
-# Enfin il faut trouver le nombre de terme AR = p en inspectant le tracé d'autocorrélation partielle (PACF).
-# PACF transmet en quelque sorte la corrélation pure entre un décalage et la série
+# Enfin il faut trouver le nombre de terme AR = p
 # Toute autocorrélation dans une série stationnaire peut être corrigée en ajoutant suffisamment de termes
 # AR. Donc, il faut prendre initialement l'ordre du terme AR comme étant égal à autant de retards qui
 # franchissent la limite de signification dans le tracé PACF
 
 # Un terme MA est techniquement, l'erreur de la prévision décalée.
-# L'ACF indique combien de termes MA sont nécessaires pour supprimer
-# toute autocorrélation dans la série stationnaire.
 # order = (AR,d,MA)
 model = ARIMA(df.value, order=(9, 1, 3))
 model_fit = model.fit(disp=0)
@@ -246,16 +231,10 @@ def build(p, d, q, val_forecast, train, test):
     model = ARIMA(train, order=(p, d, q))
     fitted = model.fit(disp=0)
     print(fitted.summary())
-
-    # Forecast
     fc, se, conf = fitted.forecast(val_forecast, alpha=0.10)  # 95% conf
-
-    # Make as pandas series
     fc_series = pd.Series(fc, index=test.index)
     lower_series = pd.Series(conf[:, 0], index=test.index)
     upper_series = pd.Series(conf[:, 1], index=test.index)
-
-    # Plot
     plt.figure(figsize=(12, 5), dpi=100)
     plt.plot(train, label='training')
     plt.plot(fc_series, label='forecast')
@@ -268,4 +247,4 @@ def build(p, d, q, val_forecast, train, test):
 
 
 # get_stationarity(df)
-build(6, 1, 0, 24, train, test)
+build(6, 1, 0, 23, train, test)
