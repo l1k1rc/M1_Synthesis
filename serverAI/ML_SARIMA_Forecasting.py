@@ -117,7 +117,11 @@ def chunks(l, n):
     n = max(1, n)
     return (l[i:i + n] for i in range(0, len(l), n))
 
-
+'''
+Allows to test a series on its stationarity with the Dickey-fuller test based
+on a p-value parameter. If this parameter is small, i.e. less than 0.05, then 
+the series is stationary.
+'''
 def test_stationarity(data):
     # Determing rolling statistics
     rolmean = pd.rolling_mean(data, window=12)
@@ -131,7 +135,8 @@ def test_stationarity(data):
     # Perform Dickey-Fuller test:
     print('Results of Dickey-Fuller Test:')
     dftest = adfuller(data, autolag='AIC')
-    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
+    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used',
+                                             'Number of Observations Used'])
     for key, value in dftest[4].items():
         dfoutput['Critical Value (%s)' % key] = value
     print(dfoutput)
@@ -182,25 +187,31 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
 
 # simple_graphics(y)
 # test_stationarity(y)
+
+'''
+Main program for calling methods for prediction and build objects.
+'''
 # SARIMA = #, #, p, d ,q, P, D, Q, seasonal_length
 if __name__ == '__main__':
-    #data_nbClient = build_forecast(y, 120, 1, 1, 3, 1, 1, 3, 24)
-    #data_bandwidth = build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24)
-    #data_per_day = np.array_split(data_nbClient, 5)
-    #data_per_day2 = np.array_split(data_bandwidth, 5)
-    #print("Données prévisionnelles CLIENT trouvées :", data_per_day[4])
-    #print("Données prévisionnelles BANDWIDTH trouvées :", data_per_day2[4])
+    data_nbClient = build_forecast(y, 120, 1, 1, 3, 1, 1, 3, 24)
+    data_bandwidth = build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24)
+    data_per_day = np.array_split(data_nbClient, 5)
+    data_per_day2 = np.array_split(data_bandwidth, 5)
+    print("Données prévisionnelles CLIENT trouvées :", data_per_day[4])
+    print("Données prévisionnelles BANDWIDTH trouvées :", data_per_day2[4])
     # hyperparameters_optimization(y2, 2)
-    bandw= [ 6.65171866,  7.06652892,  6.61939953,  6.35592648,  6.69115388,  6.70911482,
- 20.56398906, 28.27066157, 42.39053732, 39.93363959, 33.04779804, 22.91996339,
- 25.85437229, 35.84187408, 35.62544274, 37.27670248, 32.23307843, 23.74807482,
-  8.98115899,  6.84019842,  5.93580994,  6.51043029,  7.43090845,  6.37852602]
-    client = [ 0.58833904,  0.7982554,   0.63584265,  1.46336553,  3.39448886, 24.50832777,
- 88.57359031, 83.20399695, 90.71330493, 65.80420067, 99.25192096, 80.32339244,
- 70.19750135, 59.86896227, 62.37100703, 76.11793211, 47.55388684, 27.79311894,
-  4.94719571,  5.07825451,  4.41314763,  1.33852979,  2.35800205,  1.24906072]
+    '''  bandw= [ 6.65171866,  7.06652892,  6.61939953,  6.35592648,  6.69115388,  6.70911482,
+     20.56398906, 28.27066157, 42.39053732, 39.93363959, 33.04779804, 22.91996339,
+     25.85437229, 35.84187408, 35.62544274, 37.27670248, 32.23307843, 23.74807482,
+      8.98115899,  6.84019842,  5.93580994,  6.51043029,  7.43090845,  6.37852602]
+        client = [ 0.58833904,  0.7982554,   0.63584265,  1.46336553,  3.39448886, 24.50832777,
+     88.57359031, 83.20399695, 90.71330493, 65.80420067, 99.25192096, 80.32339244,
+     70.19750135, 59.86896227, 62.37100703, 76.11793211, 47.55388684, 27.79311894,
+      4.94719571,  5.07825451,  4.41314763,  1.33852979,  2.35800205,  1.24906072]
+    '''
+
     forecast = forecasting.Forecasting(6,8,20)
-    forecast.add(bandw,client,"Monday")
+    forecast.add(data_per_day2[4],data_per_day[4],"Monday")
     forecast.predict("Monday")
     forecast.graphics("Monday")
     # print(forecast.daysD["Monday"].get_frct_nbClient(13))  # +1h
