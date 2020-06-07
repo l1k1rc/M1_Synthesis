@@ -29,7 +29,7 @@ s_pers = Spinbox(Frame1, from_=0, to=500)
 
 
 Frame2 = Frame(fenetre, borderwidth=2, relief=GROOVE)
-Frame2.pack(side=BOTTOM, fill=X, ipady=50)
+Frame2.pack(side=BOTTOM, fill=X, ipady=0)
 
 
 Frame3 = Frame(fenetre, borderwidth=2,bg='white')
@@ -64,15 +64,38 @@ canvasLog.config(yscrollcommand=scrollbar.set)
 
 Label(Frame3, text="Simulation").pack(side=TOP, padx=80, pady=20)
 
-img = ImageTk.PhotoImage(file="data/PredictionRNN.png")
-canvasUser = tk.Canvas(Frame3, width=20, height=20)
-canvasUser.create_image(0, 0, anchor=tk.NW, image=img)
-canvasUser.pack()
 
-labelImg = tk.Label(canvasUser, image=img)
-labelImg.pack()
+canvasSim = Canvas(Frame3, bg="Black")
 
+img1 = ImageTk.PhotoImage(file="stats.png")
+img2 = ImageTk.PhotoImage(file="user.png")
+img3 = ImageTk.PhotoImage(file="user.png")
 
+#canvasUser = tk.Canvas(canvasSim, width=10, height=10)
+#canvasUser.create_image(0, 0, anchor=tk.NW, image=img1)
+#canvasUser.pack()
+
+scrollbar2 = Scrollbar(Frame3, orient=VERTICAL, command=canvasSim.yview)
+scrollbar2.pack(side=RIGHT,fill=Y)
+scrollbar2.config(command=canvasSim.yview)
+
+scrollbar3 = Scrollbar(Frame3, orient=HORIZONTAL, command=canvasSim.yview)
+scrollbar3.pack(side=BOTTOM,fill=X)
+scrollbar3.config(command=canvasSim.xview)
+
+canvasSim.config(width=100,height=100)
+canvasSim.config(yscrollcommand=scrollbar2.set)
+canvasSim.config(xscrollcommand=scrollbar3.set)
+canvasSim.pack(side=LEFT,expand=True,fill=BOTH)
+
+canvasSim.create_image(100,100,image=img1)
+
+#labelImg1 = tk.Label(canvasSim, image=img1)
+#labelImg1.pack()
+#labelImg2 = tk.Label(canvasSim, image=img2)
+#labelImg2.pack()
+#labelImg3 = tk.Label(canvasSim, image=img3)
+#labelImg3.pack()
 
 # On démarre la boucle Tkinter qui s'interompt quand on ferme la fenêtre
 fenetre.mainloop()
