@@ -17,8 +17,8 @@ def boutonFourreTout():
 # On crée une fenêtre, racine de notre interface
 fenetre = tk.Tk()
 fenetre.title('Simulation')
-fenetre.maxsize(1300, 700)
-fenetre.minsize(1300, 700)
+fenetre.maxsize(1700, 700)
+fenetre.minsize(1700, 700)
 fenetre['bg']='white'
 
 Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
@@ -67,9 +67,8 @@ Label(Frame3, text="Simulation").pack(side=TOP, padx=80, pady=20)
 
 canvasSim = Canvas(Frame3, bg="Black")
 
-img1 = ImageTk.PhotoImage(file="stats.png")
-img2 = ImageTk.PhotoImage(file="user.png")
-img3 = ImageTk.PhotoImage(file="user.png")
+img1 = ImageTk.PhotoImage(file="data/PredictionARIMA3.png")
+
 
 #canvasUser = tk.Canvas(canvasSim, width=10, height=10)
 #canvasUser.create_image(0, 0, anchor=tk.NW, image=img1)

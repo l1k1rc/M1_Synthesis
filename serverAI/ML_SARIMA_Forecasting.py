@@ -10,7 +10,6 @@ import pandas as pd
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller
 
-import serverAI.IA_final_dataframe as forecasting
 plt.style.use('fivethirtyeight')
 
 mydb = mysql.connector.connect(
@@ -33,8 +32,7 @@ for row in result_set:
     # user.append(row[1])
     # time.append(row[0])
 
-dttime = pd.DataFrame(dt)
-dttime.to_csv('../data/new_.csv', index=False, header=True)
+
 
 
 # register_matplotlib_converters()
@@ -153,13 +151,12 @@ This method build a plot to show the prediction values and get them to send to a
 def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
     # Hyperparameters given by their optimization from grid-searching done before
     # for each value : p,d,q and P,D,Q,m
-    forecastResult = {}
     res = sm.tsa.statespace.SARIMAX(data,
                                     order=(p, d, q),
                                     seasonal_order=(P, D, Q, length_predicted),
                                     enforce_stationarity=True,
-                                    enforce_invertibility=True)
-    results = res.fit(disp=0)
+                                    enforce_invertibility=True)  # Hyperparamter optimization used here
+    results = res.fit(disp=0)  # disable some useless logs
     print(results.summary().tables[1])
     # in-sample-prediction and confidence bounds
     pred = results.get_prediction(start=0,
@@ -187,32 +184,3 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
 
 # simple_graphics(y)
 # test_stationarity(y)
-
-'''
-Main program for calling methods for prediction and build objects.
-'''
-# SARIMA = #, #, p, d ,q, P, D, Q, seasonal_length
-if __name__ == '__main__':
-    data_nbClient = build_forecast(y, 120, 1, 1, 3, 1, 1, 3, 24)
-    data_bandwidth = build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24)
-    data_per_day = np.array_split(data_nbClient, 5)
-    data_per_day2 = np.array_split(data_bandwidth, 5)
-    print("Données prévisionnelles CLIENT trouvées :", data_per_day[4])
-    print("Données prévisionnelles BANDWIDTH trouvées :", data_per_day2[4])
-    # hyperparameters_optimization(y2, 2)
-    '''  bandw= [ 6.65171866,  7.06652892,  6.61939953,  6.35592648,  6.69115388,  6.70911482,
-     20.56398906, 28.27066157, 42.39053732, 39.93363959, 33.04779804, 22.91996339,
-     25.85437229, 35.84187408, 35.62544274, 37.27670248, 32.23307843, 23.74807482,
-      8.98115899,  6.84019842,  5.93580994,  6.51043029,  7.43090845,  6.37852602]
-        client = [ 0.58833904,  0.7982554,   0.63584265,  1.46336553,  3.39448886, 24.50832777,
-     88.57359031, 83.20399695, 90.71330493, 65.80420067, 99.25192096, 80.32339244,
-     70.19750135, 59.86896227, 62.37100703, 76.11793211, 47.55388684, 27.79311894,
-      4.94719571,  5.07825451,  4.41314763,  1.33852979,  2.35800205,  1.24906072]
-    '''
-
-    forecast = forecasting.Forecasting(6,8,20)
-    forecast.add(data_per_day2[4],data_per_day[4],"Monday")
-    forecast.predict("Monday")
-    forecast.graphics("Monday")
-    # print(forecast.daysD["Monday"].get_frct_nbClient(13))  # +1h
-    print(forecast.daysD["Monday"].toString())

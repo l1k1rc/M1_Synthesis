@@ -39,7 +39,10 @@ class Interval:
     def expect(self, value):
         for s in self.listOfSegment:
             if value in s:
+                print("HELLO")
                 return self.listOfSegment.index(s) + 1
+            else:
+                return self.listOfSegment[-1].index()
 
 
 #test lines
