@@ -1,5 +1,6 @@
 import portion as P
 
+errorColorIndex = []
 '''
 This class allows to manage a certain number of segments equal to the number of wifi terminals present in the system. 
 These segments are defined according to the maximum capacities of the access point and allow, thanks to an evaluation 
@@ -42,8 +43,13 @@ class Interval:
         for s in self.listOfSegment:
             if value in s:
                 return self.listOfSegment.index(s) + 1
+        print("Error number of AP insufficient.")
+        return len(self.listOfSegment)
 
 
+
+def getErrorColorIndex():
+    return errorColorIndex
 
 #test lines
 '''# nb de borne +  capacité

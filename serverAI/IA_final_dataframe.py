@@ -60,7 +60,7 @@ class Forecasting:
         interval.config()
         interval.build()
         # Here, we want to calculate some results about the heuristic definition
-        for i in range(23):  # interval.expect(
+        for i in range(24):  # interval.expect(
             self.daysD[days_].addEnd(interval.expect(
                 interval.define(self.daysD[days_].get_frct_nbClient(i), self.daysD[days_].get_frct_bandwidth(i))))
 
@@ -68,9 +68,9 @@ class Forecasting:
         hour = range(len(self.daysD[days_].getMixresult()))
         fig, ax = plt.subplots(figsize=(19, 8))
         ax.bar(hour, self.daysD[days_].getMixresult())
-        ax.set_xlabel('Heures')
-        ax.set_ylabel('Nb. Points d\'accès')
-        ax.set_title('Nombre de bornes WIFI idéal du ' + days_)
+        ax.set_xlabel('Hour')
+        ax.set_ylabel('Nb. Access Points')
+        ax.set_title('Number of access points needed for ' + days_)
         fig.tight_layout()
         plt.savefig('../data/Prediction_Result_for_' + days_ + '.png')
         plt.show()

@@ -197,7 +197,7 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,data
     ax.set_xlabel('Per hour', fontsize=18)
     ax.set_ylabel(dataName, fontsize=18)
     plt.legend(loc='upper left', prop={'size': 20})
-    plt.title('Prediction SARIMA', fontsize=22, fontweight="bold")
+    plt.title('Prediction SARIMA '+day, fontsize=22, fontweight="bold")
     plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
     plt.show()
     line = ax.lines[1]
