@@ -37,12 +37,12 @@ class Interval:
         return 0.6 * nbClient + 0.4 * bandwidth
 
     def expect(self, value):
+        # for each subsection, we want to know if the value resulting from
+        # the heuristic belong to the subsection
         for s in self.listOfSegment:
             if value in s:
-                print("HELLO")
                 return self.listOfSegment.index(s) + 1
-            else:
-                return self.listOfSegment[-1].index()
+
 
 
 #test lines

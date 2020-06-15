@@ -17,10 +17,11 @@ Main program for calling methods for prediction and build objects.
 # SARIMA = #, #, p, d ,q, P, D, Q, seasonal_length
 if __name__ == '__main__':
     # Retrieve data from logs files
-    y = pd.DataFrame(getData("../data/log_mardi.csv"))
+    day="Tuesday"
+    y = pd.DataFrame(getData("../data/final.csv"))
     y2 = pd.DataFrame(getData("../data/final_bandwidth.csv"))
-    data_nbClient = ia.build_forecast(y, 120, 1, 1, 3, 1, 1, 3, 24)
-    data_bandwidth = ia.build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24)
+    data_nbClient = ia.build_forecast(y, 120, 1, 1, 3, 1, 1, 3, 24,"nbCLient",day)
+    data_bandwidth = ia.build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24,"Bandwidth_Mo.s",day)
     data_per_day = np.array_split(data_nbClient, 5)
     data_per_day2 = np.array_split(data_bandwidth, 5)
     print("Données prévisionnelles CLIENT trouvées :", abs(data_per_day[4]))
@@ -28,8 +29,8 @@ if __name__ == '__main__':
     # hyperparameters_optimization(y2, 2)
 
     forecast = Forecasting(6, 8, 20)
-    forecast.add(abs(data_per_day2[4]), abs(data_per_day[4]), "Monday")
-    forecast.predict("Monday")
-    forecast.graphics("Monday")
+    forecast.add(abs(data_per_day2[4]), abs(data_per_day[4]), day)
+    forecast.predict(day)
+    forecast.graphics(day)
     # print(forecast.daysD["Monday"].get_frct_nbClient(13))  # +1h
-    print(forecast.daysD["Monday"].toString())
+    print(forecast.daysD[day].toString())

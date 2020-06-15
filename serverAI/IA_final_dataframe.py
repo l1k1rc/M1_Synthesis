@@ -72,6 +72,7 @@ class Forecasting:
         ax.set_ylabel('Nb. Points d\'accès')
         ax.set_title('Nombre de bornes WIFI idéal du ' + days_)
         fig.tight_layout()
+        plt.savefig('../data/Prediction_Result_for_' + days_ + '.png')
         plt.show()
 
 

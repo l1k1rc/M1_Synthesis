@@ -80,6 +80,21 @@ def simple_graphics(data):
     plt.show()
 
 
+import time
+
+
+class Timer(object):
+    def start(self):
+        if hasattr(self, 'interval'):
+            del self.interval
+        self.start_time = time.time()
+
+    def stop(self):
+        if hasattr(self, 'start_time'):
+            self.interval = time.time() - self.start_time
+            del self.start_time  # Force timer reinit
+
+
 '''
 @:parameter= data : send timeserie values
 @:param training_length : Intreval of search where AIC criterion try  
@@ -97,19 +112,26 @@ def hyperparameters_optimization(data,
     pdq = list(itertools.product(p, d, q))
     seasonal_pdq = [(x[0], x[1], x[2], 24) for x in list(itertools.product(p, d, q))]
     lf_min = []
+    with open("log_perf.log", "w") as f:
+        f.write("p,d,q,P,D,Q,Time,AIC\n")
 
     for param in pdq:
         for param_seasonal in seasonal_pdq:
             try:
+                timer = Timer()
+                timer.start()
                 mod = sm.tsa.statespace.SARIMAX(data, order=param, seasonal_order=param_seasonal,
                                                 enforce_stationarity=False, enforce_invertibility=False)
                 results = mod.fit(disp=0)
                 print('ARIMA{}x{}24 - AIC:{}'.format(param, param_seasonal, results.aic))
                 lf_min.append(results.aic)
+                timer.stop()
+                print('Total time in seconds for first call:', timer.interval)
+                with open("log_perf.log", "a") as f:
+                    f.write('{},{},{},{}\n'.format(param, param_seasonal, timer.interval, results.aic))
             except:
                 continue
     print("La veleurs minimal par le critère d'information d'Akaike est :", min(lf_min))
-
 
 def chunks(l, n):
     n = max(1, n)
@@ -148,7 +170,7 @@ This method build a plot to show the prediction values and get them to send to a
 '''
 
 
-def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
+def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,dataName,day):
     # Hyperparameters given by their optimization from grid-searching done before
     # for each value : p,d,q and P,D,Q,m
     res = sm.tsa.statespace.SARIMAX(data,
@@ -168,15 +190,15 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
     ax = fig.add_subplot(111)
     x = list(range(0, len(data) + 24))
     plt.xticks(np.arange(min(x), max(x) + 1, 5.0))
-    ax.plot(data[0:], color='#006699', linewidth=3, label='Actual')
+    ax.plot(data[0:], color='#006699', linewidth=3, label='Logs data')
     pred.predicted_mean.plot(ax=ax, linewidth=3, linestyle='-', label='Forecast', alpha=.7, color='#ff5318',
                              fontsize=18)
     ax.fill_betweenx(ax.get_ylim(), train_duration, data.index[-1], alpha=.3, zorder=-1, color='pink')
     ax.set_xlabel('Per hour', fontsize=18)
-    ax.set_ylabel('Nb.users', fontsize=18)
+    ax.set_ylabel(dataName, fontsize=18)
     plt.legend(loc='upper left', prop={'size': 20})
     plt.title('Prediction SARIMA', fontsize=22, fontweight="bold")
-    plt.savefig('../data/PredictionARIMA3.png')
+    plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
     plt.show()
     line = ax.lines[1]
     return line.get_ydata()
@@ -184,3 +206,4 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted):
 
 # simple_graphics(y)
 # test_stationarity(y)
+#hyperparameters_optimization(y2, 5)
