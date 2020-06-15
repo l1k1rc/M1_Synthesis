@@ -102,6 +102,14 @@ def average_log_rows(days_rows):
     return int(rows_average)
 
 
+def average_clients(client_list):
+    all_clients = 0
+    for clients in client_list:
+        all_clients += len(clients)
+    client_average = all_clients / len(client_list)
+    return int(client_average)
+
+
 def median_log_rows(days_rows):
     rows_array = []
     for day_rows in days_rows:
@@ -111,17 +119,25 @@ def median_log_rows(days_rows):
     return rows_median
 
 
+def median_clients(client_list):
+    all_clients = []
+    for clients in client_list:
+        all_clients.append(len(clients))
+    client_median = median(all_clients)
+    return int(client_median)
+
+
 def plt_data(array_data, scale):
     time_array = []
     nbr_array = []
     for data in array_data:
         # TODO: dynamique
-        time_array.append(data[0][0].minute)
+        time_array.append(data[0][0])
         #time_array.append(str(data[0][0]))
         nbr_array.append(len(data))
     plt.plot(time_array, nbr_array)
     plt.xlabel("Time")
-    plt.ylabel("Users")
+    plt.ylabel("Clients")
     plt.title("Clients between " + str(array_data[0][0][0]) + " and " + str(array_data[len(array_data)-1][0][0]))
     plt.show()
 
@@ -146,6 +162,46 @@ def plt_data(array_data, scale):
 #print(len(test_array[1]))
 #print(len(test_array[2]))
 
-list = list_clients_between_dates(datetime(2018, 3, 7, 17), datetime(2018, 3, 7, 18))
-sorted_list = sort_list(list, "minute")
-plt_data(sorted_list, 0)
+
+#TESTS rapport
+print("Analyse statistique :")
+list = list_clients_between_dates(datetime(2018, 4, 4, 8), datetime(2018, 4, 4, 17))
+sorted_list = sort_list(list, "minutes")
+plt_data(sorted_list, "minutes")
+print("Moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(average_clients(sorted_list)))
+print("Médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(median_clients(sorted_list)))
+
+list = list_clients_between_dates(datetime(2018, 4, 11, 8), datetime(2018, 4, 11, 17))
+sorted_list = sort_list(list, "minutes")
+plt_data(sorted_list, "minutes")
+print("Moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(average_clients(sorted_list)))
+print("Médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(median_clients(sorted_list)))
+
+list = list_clients_between_dates(datetime(2018, 4, 18, 8), datetime(2018, 4, 18, 17))
+sorted_list = sort_list(list, "minutes")
+plt_data(sorted_list, "minutes")
+print("Moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(average_clients(sorted_list)))
+print("Médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(median_clients(sorted_list)))
+
+list = list_clients_between_dates(datetime(2018, 4, 25, 8), datetime(2018, 4, 25, 17))
+sorted_list = sort_list(list, "minutes")
+plt_data(sorted_list, "minutes")
+print("Moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(average_clients(sorted_list)))
+print("Médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(median_clients(sorted_list)))
+
+print("___________________________________________________________")
+print("Estimation pout le 5ème jour :")
+moy = (12 + 11 + 9 + 8)/4
+med = median([14, 11, 9, 8])
+list = list_clients_between_dates(datetime(2018, 5, 2, 8), datetime(2018, 5, 2, 17))
+sorted_list = sort_list(list, "minutes")
+plt_data(sorted_list, "minutes")
+print("Estimation de moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(moy))
+print("Estimation de médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(med))
+
+print("___________________________________________________________")
+print("Réalité :")
+print("Moyenne des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(average_clients(sorted_list)))
+print("Médiane des clients du " + str(sorted_list[0][0][0]) + " au " + str(sorted_list[len(sorted_list)-1][0][0]) + " : " + str(median_clients(sorted_list)))
+
+
