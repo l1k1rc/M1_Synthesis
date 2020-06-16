@@ -12,6 +12,8 @@
 
 set vlan_connected [lindex $argv 0]
 set vlan_unconnected [lindex $argv 1]
+set name_connected [lindex $argv 2]
+set name_unconnected [lindex $argv 3]
 
 source ./ssh_connection
 source ./admin_mode
@@ -25,14 +27,14 @@ send "ter\r"
 expect "*(config)#"
 
 puts -nonewline "\033\[1;32m"; #GREEN
-puts "\nCreation of vlan $vlan_connected named connected_pole"
+puts "\nCreation of vlan $vlan_connected named $name_connected"
 puts "\033\[0m"; #Reset
 
 send "vlan $vlan_connected\r"
 
 expect "*(config-vlan)#"
 
-send "name connected_pole\r"
+send "name $name_connected\r"
 
 expect "*(config-vlan)#"
 
@@ -41,14 +43,14 @@ send "exit\r"
 expect "*(config)#"
 
 puts -nonewline "\033\[1;32m"; #GREEN
-puts "\nCreation of vlan $vlan_unconnected named unconnected_pole"
+puts "\nCreation of vlan $vlan_unconnected named $name_unconnected"
 puts "\033\[0m"; #Reset
 
 send "vlan $vlan_unconnected\r"
 
 expect "*(config-vlan)#"
 
-send "name unconnected_pole\r"
+send "name $name_unconnected\r"
 
 expect "*(config-vlan)#"
 

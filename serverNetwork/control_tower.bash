@@ -61,21 +61,21 @@ usage()
     echo "  ${BOLD}--show-interface-status${END}                Display interface list with state (Enable/Disable) "
     echo "  ${BOLD}--show-mac-address${END}                     Display mac address of all devices connected "
     echo "  ${BOLD}--show-vlan-conf${END}                       Disaply the VLAN list "
-    echo "  ${BOLD}--enable-poe-port${END}                      TODO "
-    echo "  ${BOLD}--disable-poe-port${END}                     TODO "
-    echo "  ${BOLD}--add-vlan${END}                             TODO "
-    echo "  ${BOLD}--delete-vlan${END}                          TODO "
+    echo "  ${BOLD}--enable-poe-port${END}                      Enable a POE port or all POE ports"
+    echo "  ${BOLD}--disable-poe-port${END}                     Disable a POE port or all POE ports "
+    echo "  ${BOLD}--add-vlan${END}                             Create two vlans "
+   #echo "  ${BOLD}--delete-vlan${END}                          Delete two vlans "
     echo
 }
 
 ##################################################
 #     CHECKING PARAMETERS                        #
 ##################################################
-getopt_results=$(${GETOPT} -s bash -o h,i --long help,interactive-mode,show-conf,show-interface-status,show-mac-address,show-vlan-conf,enable-poe-port:,disable-poe-port:,add-vlan:,delete-vlan: -- "$@" 2>/dev/null)
+getopt_results=$(${GETOPT} -s bash -o h,i,n: --long help,interactive-mode,show-conf,show-interface-status,show-mac-address,show-vlan-conf,enable-poe-port:,disable-poe-port:,add-vlan:,delete-vlan:,names: -- "$@" 2>/dev/null)
 
 if test $? != 0
 then
-    catch "Unrecognized parameter" ${ERR_UNRECOGNIZED_OPTION}
+	catch "Unrecognized parameter" ${ERR_UNRECOGNIZED_OPTION}
 fi
 
 INTERACTIVEMODE=0
@@ -87,10 +87,12 @@ ENABLEPOEPORT=0
 DISABLEPOEPORT=0
 ADDVLAN=0
 DELETEVLAN=0
+NAMES=0
 
 OPTION=0
 PORT=0
-VLAN=0
+VLANS=0
+NAMEVLANS=0
 
 eval set -- "${getopt_results}"
 while true
@@ -134,7 +136,7 @@ do
 	    	;;
         --add-vlan)
 			ADDVLAN=1
-            VLAN="$(echo -n ${2})"
+            VLANS="$(echo -n ${2})"
 	    	let "OPTION++"
 	    	shift 2
 	    	;;
@@ -143,6 +145,16 @@ do
             VLAN="$(echo -n ${2})"
 	    	let "OPTION++"
 	    	shift 2
+	    	;;
+		-n|--names)
+			if [[ "$ADDVLAN" -eq "1" ]]; then
+				NAMES=1
+            	NAMEVLANS="$(echo -n ${2})"
+	    		let "OPTION++"
+	    		shift 2
+			else
+				catch "Unrecognized parameter" ${ERR_UNRECOGNIZED_OPTION}
+			fi
 	    	;;
         --)
             shift
@@ -199,10 +211,28 @@ if [[ $INTERACTIVEMODE -eq 0 ]]; then
 			fi
 	    	;;
         $ADDVLAN)
-            echo "TODO"
+			vlan1=$(echo $VLANS | awk 'BEGIN { FS = "," } ; { print $1 }')
+			vlan2=$(echo $VLANS | awk 'BEGIN { FS = "," } ; { print $2 }')
+			name1=$(echo $NAMEVLANS | awk 'BEGIN { FS = "," } ; { print $1 }')
+			name2=$(echo $NAMEVLANS | awk 'BEGIN { FS = "," } ; { print $2 }')
+            if [[ "$vlan1" -gt "99" || "$vlan1" -lt "1" || "$vlan2" -gt "99" || "$vlan2" -lt "1" || -z $name1 || -z $name2 ]]; then
+				catch "Unparseable option" ${ERR_PARAMETERS_CONFLICT}
+			else
+				echo "expect create_vlan $vlan1 $vlan2 $name1 $name2"
+				expect create_vlan $vlan1 $vlan2 $name1 $name2
+			fi
 	    	;;
         DELETEVLAN)
-            echo "TODO"
+			vlan1=$(echo $VLANS | awk 'BEGIN { FS = "," } ; { print $1 }')
+			vlan2=$(echo $VLANS | awk 'BEGIN { FS = "," } ; { print $2 }')
+			name1=$(echo $NAMEVLANS | awk 'BEGIN { FS = "," } ; { print $1 }')
+			name2=$(echo $NAMEVLANS | awk 'BEGIN { FS = "," } ; { print $2 }')
+            if [[ "$vlan1" -gt "99" || "$vlan1" -lt "1" || "$vlan2" -gt "99" || "$vlan2" -lt "1" || -z $name1 || -z $name2 ]]; then
+				catch "Unparseable option" ${ERR_PARAMETERS_CONFLICT}
+			else
+				echo "expect delete_vlan $vlan1 $vlan2 $name1 $name2"
+				expect delete_vlan $vlan1 $vlan2 $name1 $name2
+			fi
 	    	;;
         *) 
             catch "Unparseable option" ${ERR_UNPARSEABLE_PARAMETER}
