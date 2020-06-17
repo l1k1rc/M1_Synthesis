@@ -50,8 +50,8 @@ def getData(filename):
     return ts
 
 
-y = pd.DataFrame(getData("../data/final.csv"))
-y2 = pd.DataFrame(getData("../data/final_bandwidth.csv"))
+y = pd.DataFrame(getData("../data/log_lundi.csv"))
+y2 = pd.DataFrame(getData("../data/log_lundi_bw.csv"))
 '''
 Methode which just display data inside graphics.
 '''
