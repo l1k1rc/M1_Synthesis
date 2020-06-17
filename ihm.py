@@ -190,7 +190,7 @@ img7.save('Prediction_Result_for_Tuesday.png', img3.format)
 
 img8 = Image.open('Prediction_Bandwidth_Mo.s_for_Wednesday.png')
 img8 = resizeimage.resize_thumbnail(img8, [800, 700])
-img8.save('Prediction_nbCLient_for_Wednesday.png', img8.format)
+img8.save('Prediction_Bandwidth_Mo.s_for_Wednesday.png', img8.format)
 
 img9 = Image.open('Prediction_nbCLient_for_Wednesday.png')
 img9 = resizeimage.resize_thumbnail(img9, [800, 700])
