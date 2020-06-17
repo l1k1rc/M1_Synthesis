@@ -218,8 +218,10 @@ if [[ $INTERACTIVEMODE -eq 0 ]]; then
             if [[ "$vlan1" -gt "99" || "$vlan1" -lt "1" || "$vlan2" -gt "99" || "$vlan2" -lt "1" || -z $name1 || -z $name2 ]]; then
 				catch "Unparseable option" ${ERR_PARAMETERS_CONFLICT}
 			else
-				echo "expect create_vlan $vlan1 $vlan2 $name1 $name2"
-				expect create_vlan $vlan1 $vlan2 $name1 $name2
+				#echo "expect create_vlan $vlan1 $vlan2 $name1 $name2"
+				#expect create_vlan $vlan1 $vlan2 $name1 $name2
+				echo "expect create_vlan_switch_simulation.expect $vlan1 $vlan2 $name1 $name2"
+				expect create_vlan_switch_simulation.expect $vlan1 $vlan2 $name1 $name2
 			fi
 	    	;;
         DELETEVLAN)
@@ -303,14 +305,22 @@ Which port would you disable (between 1 and 12) ?
 			7) echo "Which vlan number would you assign to connected area ?"
 			   read
 			   connected_area=$REPLY
+			   echo "Which name would you assign to connected area ?"
+			   read
+			   connected_name=$REPLY
 			   echo "Which vlan number would you assign to disconnected area ?" 
 			   read
 			   disconnected_area=$REPLY
-		       if [[ "$connected_area" -gt "1" && "$disconnected_area" -gt "1" ]]; then
-				   echo "expect create_vlan"
-				   expect create_vlan $connected_area $disconnected_area
+			   echo "Which name would you assign to disconnected area ?"
+			   read
+			   disconnected_name=$REPLY
+               if [[ "$connected_area" -gt "99" || "$connected_area" -lt "0" || "$disconnected_area" -gt "99" || "$disconnected_area" -lt "0" || -z $connected_name || -z $disconnected_name ]]; then
+			       echo "Wrong entry..."
 			   else
-				   echo "Wrong entry..."
+				   #echo "expect create_vlan $connected_area $disconnected_area $connected_name $disconnected_name"
+				   #expect create_vlan $connected_area $disconnected_area $connected_name $disconnected_name
+				   echo "expect create_vlan_switch_simulation.expect $connected_area $disconnected_area $connected_name $disconnected_name"
+				   expect create_vlan_switch_simulation.expect $connected_area $disconnected_area $connected_name $disconnected_name
 			   fi
 				;;
 			8) 	echo "Which port would you delete ?"
