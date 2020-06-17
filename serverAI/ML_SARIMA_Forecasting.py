@@ -3,40 +3,13 @@ import warnings
 
 import matplotlib
 import matplotlib.pyplot as plt
-import \
-    mysql.connector  # pip search mysql-connector | grep --color mysql-connector-pytho | pip install mysql-connector-python (get the last one)
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import time
 from statsmodels.tsa.stattools import adfuller
 
 plt.style.use('fivethirtyeight')
-
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="l1k1",
-    passwd="raccoon",
-    database="projetM1"
-)
-
-mycursor = mydb.cursor()
-
-mycursor.execute("SELECT time, count(*) as NUM FROM csv_data GROUP BY time LIMIT 100")
-result_set = mycursor.fetchall()
-time = []
-user = []
-dt = []
-for row in result_set:
-    dt.append(row)
-    # print("%s, %s" % (row[0], row[1]))
-    # user.append(row[1])
-    # time.append(row[0])
-
-
-
-
-# register_matplotlib_converters()
-
 
 def getData(filename):
     list_daf = []
@@ -49,9 +22,6 @@ def getData(filename):
     print(ts)
     return ts
 
-
-y = pd.DataFrame(getData("../data/log_lundi.csv"))
-y2 = pd.DataFrame(getData("../data/log_lundi_bw.csv"))
 '''
 Methode which just display data inside graphics.
 '''
@@ -78,9 +48,6 @@ def simple_graphics(data):
     plt.title('Number of user per hour', fontsize=22, fontweight="bold")
     plt.savefig('../data/PredictionARIMA3.png')
     plt.show()
-
-
-import time
 
 
 class Timer(object):
@@ -198,8 +165,11 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,data
     ax.set_ylabel(dataName, fontsize=18)
     plt.legend(loc='upper left', prop={'size': 20})
     plt.title('Prediction SARIMA '+day, fontsize=22, fontweight="bold")
-    plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
-    plt.show()
+    #For the execution from the IDE
+    #plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
+    #For the execution from the terminal
+    plt.savefig('Prediction_' + dataName + '_for_' + day + '.png')
+    #plt.show()
     line = ax.lines[1]
     return line.get_ydata()
 

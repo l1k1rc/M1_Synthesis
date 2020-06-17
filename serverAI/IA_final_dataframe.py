@@ -72,8 +72,11 @@ class Forecasting:
         ax.set_ylabel('Nb. Access Points')
         ax.set_title('Number of access points needed for ' + days_)
         fig.tight_layout()
-        plt.savefig('../data/Prediction_Result_for_' + days_ + '.png')
-        plt.show()
+        #For the execution from the IDE
+        #plt.savefig('../data/Prediction_Result_for_' + days_ + '.png')
+        #For the execution from the terminal
+        plt.savefig('Prediction_Result_for_' + days_ + '.png')
+        #plt.show()
 
 
 '''forecast = Forecasting(15,5,30)
