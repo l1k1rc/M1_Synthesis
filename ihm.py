@@ -9,7 +9,7 @@ import csv
 # def du bouton stats
 def boutonFourreTout():
     newWindow = tk.Toplevel(fenetre)
-    newWindow.title('Détails des jours')
+    newWindow.title("Day's details")
     newWindow.maxsize(400, 610)
     newWindow.minsize(400, 610)
 
@@ -21,9 +21,9 @@ def boutonFourreTout():
     o2.pack()
     o3 = ttk.Frame(n, width=400, height=500)  # Ajout de l'onglet 3
     o3.pack()
-    n.add(o1, text='Jour 1')  # Nom de l'onglet 1
-    n.add(o2, text='Jour 2')  # Nom de l'onglet 2
-    n.add(o3, text='Jour 3')  # Nom de l'onglet 3
+    n.add(o1, text='Day 1')  # Nom de l'onglet 1
+    n.add(o2, text='Day 2')  # Nom de l'onglet 2
+    n.add(o3, text='Day 3')  # Nom de l'onglet 3
 
     liste = ["0      |", "1      |", "2      |", "3      |", "4      |", "5      |", "6      |", "7      |", "8      |",
              "9      |", "10    |", "11    |", "12    |", "13    |", "14    |", "15    |", "16    |", "17    |", "18    |",
@@ -126,16 +126,16 @@ Frame3.pack(fill=X, ipady=250)
 
 text = Text(Frame2)
 
-stats = Button(Frame1, text="Détails des jours", fg="white", bg="green", command=boutonFourreTout)
+stats = Button(Frame1, text="Day's details", fg="white", bg="green", command=boutonFourreTout)
 
 logs = "[5, 6, 5, 5, 4, 5, 5, 10, 23, 32, 34, 11, 15, 11, 34, 42, 38, 38, 26, 8, 5, 4, 3, 5, 4, 5, 6, 5, 5, 5, 5, " +"\n"+ "23, 28, 46, 41, 43, 17, 23, 33, 28, 31, 26, 21, 8, 5, 4, 5, 5, 4, 5, 5, 6, 5, 5, 5, 17, 34, 36, 38, 24, 39, 43, " +"\n"+ "34, 43, 45, 33, 21, 7, 5, 4, 5, 6, 2, 4, 5, 7, 5, 5, 5, 12, 41, 36, 42, 23, 12, 14, 26, 43, 35, 32, 27, 15, 5," +"\n"+ " 4, 5, 5]" +"\n"+ "[2.31, 0.84, 2.64, 2.12, 1.43, 1.35, 16.67, 98.37, 76.24, 103.69, 73.68, 85.34, 42.69, 64.21, 48.57, 56.34, "+"\n"+ "49.99, 21.54, 16.55, 4.69, 2.12, 1.45, 2.44, 2.31, 0.84, 2.12, 0.65, 0.57, 1.39, 1.64, 21.96, 96.31, 87.12, 98.55," +"\n"+ " 46.12, 136.49, 126.97, 124.65, 48.76, 56.93, 98.32, 45.21, 28.97, 2.16, 2.97, 0.54, 1.33, 4.95, 1.46, 0.19," +"\n"+ " 0.97, 0.64, 1.97, 2.64, 31.23, 76.48, 45.96, 67.45, 47.65, 101.02, 81.13, 46.73, 75.68, 102.21, 89.67, 65.48," +"\n"+ " 31.46, 3.46, 12.32, 16.46, 1.09, 1.01, 1.97, 0.68, 0.41, 0.69, 2.54, 9.42, 29.64, 84.63, 124.97, 94.65, 97.23, 75.65, " +"\n"+ "71.98, 46.68, 67.94, 35.48, 67.98, 59.46, 35.67, 10.95, 4.38, 0.68, 1.97, 2.64] " +"\n\n"+ "ARIMA(0, 0, 0)x(0, 0, 0, 24)24 - AIC:1032.8926431858006" +"\n"+ "Total time in seconds for first call: 0.019819021224975586" +"\n"+ "ARIMA(0, 0, 0)x(0, 0, 1, 24)24 - AIC:3009.8729702994" +"\n"+ "Total time in seconds for first call: 0.42527270317077637" +"\n"+ "ARIMA(0, 0, 0)x(0, 0, 2, 24)24 - AIC:484.1869674453041" +"\n"+ "Total time in seconds for first call: 0.8452131748199463" +"\n"+"ARIMA(0, 0, 0)x(0, 0, 3, 24)24 - AIC:257.78587991704126" +"\n"+"Total time in seconds for first call: 6.663841485977173"
 
-Label(Frame1, text="Paramètres Modifiables", font=("Helvetica", 14)).pack()
+Label(Frame1, text="Parameters", font=("Helvetica", 14)).pack()
 Label(Frame1, text="").pack()
-Label(Frame1, text="Nombre d'utilisateurs par borne :").pack()
+Label(Frame1, text="users per hotspot : ").pack()
 s_borne.pack()
 Label(Frame1, text="").pack()
-Label(Frame1, text="Bande passante:").pack()
+Label(Frame1, text="Bandwidth:").pack()
 s_pers.pack()
 Label(Frame1, text="").pack()
 Label(Frame1, text="").pack()
