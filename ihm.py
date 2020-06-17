@@ -67,7 +67,7 @@ Label(Frame3, text="Simulation").pack(side=TOP, padx=80, pady=20)
 
 canvasSim = Canvas(Frame3, bg="Black")
 
-img1 = ImageTk.PhotoImage(file="data/PredictionARIMA3.png")
+img1 = ImageTk.PhotoImage(file="Prediction_nbCLient_for_Monday.png")
 
 
 #canvasUser = tk.Canvas(canvasSim, width=10, height=10)
