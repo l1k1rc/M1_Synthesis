@@ -1,0 +1,62 @@
+#########################################################
+#														#
+#						SmartWIFI						#
+#					Project team BCDS					#
+#														#
+#########################################################
+# date: 02/04/20
+# autor: Team BCDS
+# contact: raphael.barrasset@gmail.com; julien.castelain@outlook.fr; g.ducroux@outlook.fr; saint-amand.matthieu@orange.fr;
+
+set vlan_connected [lindex $argv 0]
+set vlan_unconnected [lindex $argv 1]
+set name_connected [lindex $argv 2]
+set name_unconnected [lindex $argv 3]
+
+set timeout -1
+ 
+spawn ./create_vlan_switch_simulation.bash
+
+expect "*imulated ssh connection to admin@192.168.1.1 succeed"
+
+send "config\r"
+
+expect "*onfiguring from terminal, memory, or network *? "
+
+send "ter\r"
+
+expect "*(config)#"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nCreation of vlan $vlan_connected named $name_connected"
+puts "\033\[0m"; #Reset
+
+send "vlan $vlan_connected\r"
+
+expect "*(config-vlan)#"
+
+send "name $name_connected\r"
+
+expect "*(config-vlan)#"
+
+send "exit\r"
+
+expect "*(config)#"
+
+puts -nonewline "\033\[1;32m"; #GREEN
+puts "\nCreation of vlan $vlan_unconnected named $name_unconnected"
+puts "\033\[0m"; #Reset
+
+send "vlan $vlan_unconnected\r"
+
+expect "*(config-vlan)#"
+
+send "name $name_unconnected\r"
+
+expect "*(config-vlan)#"
+
+send "end\r"
+
+expect "*#"
+
+expect eof
