@@ -38,11 +38,22 @@ if __name__ == '__main__':
         arg2 = sys.argv[2]
         arg3 = sys.argv[3]
     except IndexError:
-        print(Style.FAIL + "Argument expected for the -m option \nUsage: python3 " + os.path.basename(
+        print(Style.FAIL + "Argument expected for the -m option \nUsage: python3 -m " + os.path.basename(
             __file__) + " [CSV_file1] ["
-                        "CSV_file2] [1 for IHM]/[0 for prompt only]\nTry `python -h' "
+                        "CSV_file2] [1 for IHM]/[0 for prompt only]\nTry `python3 -m serverAI.test -h' "
                         "for more information." + Style.ENDC)
+        print(
+            Style.BOLD + Style.OKGREEN + "For an AI initialization, you must look for the model parameters:\n " + Style.UNDERLINE + "python3 -m serverAI.test build file.csv 0" + Style.ENDC)
         sys.exit(1)
+
+    # Initialize the research of parameters
+    if arg1 == "build":
+        print("Research parameters initialized.")
+        print("Using the following file :"+arg2)
+        fileS = pd.DataFrame(getData("data/log_lundi.csv"))
+        ia.hyperparameters_optimization(fileS, 2)
+        sys.exit(1)
+
     print("============Artificial Intelligence SARIMA Model============\n")
     path = os.getcwd()
     repn = os.path.basename(path)
@@ -68,7 +79,6 @@ if __name__ == '__main__':
     df_bandwidth.to_csv('data/estimated_bandwidth_' + day + '.csv')
     print(Style.OKBLUE + "Estimated data found for CLIENT :" + str(abs(data_per_day[4])) + Style.ENDC)
     print(Style.HEADER + "Estimated data found for BANDWIDTH :" + str(abs(data_per_day2[4])) + Style.ENDC)
-    # hyperparameters_optimization(y2, 2)
 
     forecast = Forecasting(6, 8, 20)
     forecast.add(abs(data_per_day2[4]), abs(data_per_day[4]), day)

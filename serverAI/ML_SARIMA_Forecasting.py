@@ -1,4 +1,5 @@
 import itertools
+import time
 import warnings
 
 import matplotlib
@@ -6,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import time
 from statsmodels.tsa.stattools import adfuller
 
 plt.style.use('fivethirtyeight')
@@ -72,6 +72,7 @@ The method returns the sequence associated with the lowest of the calculated cri
 '''
 
 
+# file "../data" for execution in IDE
 def hyperparameters_optimization(data,
                                  training_length):  # ARIMA(0, 2, 1)x(1, 3, 0, 24)24 - AIC:6.0 and ARIMA(0, 1, 0)x(2, 2, 0, 24)24 - AIC:6.0
     warnings.filterwarnings("ignore")
@@ -79,9 +80,8 @@ def hyperparameters_optimization(data,
     pdq = list(itertools.product(p, d, q))
     seasonal_pdq = [(x[0], x[1], x[2], 24) for x in list(itertools.product(p, d, q))]
     lf_min = []
-    with open("log_perf.log", "w") as f:
+    with open("data/log_perf.log", "w") as f:
         f.write("p,d,q,P,D,Q,Time,AIC\n")
-
     for param in pdq:
         for param_seasonal in seasonal_pdq:
             try:
@@ -94,11 +94,11 @@ def hyperparameters_optimization(data,
                 lf_min.append(results.aic)
                 timer.stop()
                 print('Total time in seconds for first call:', timer.interval)
-                with open("log_perf.log", "a") as f:
+                with open("data/log_perf.log", "a") as f:
                     f.write('{},{},{},{}\n'.format(param, param_seasonal, timer.interval, results.aic))
             except:
                 continue
-    print("La veleurs minimal par le critère d'information d'Akaike est :", min(lf_min))
+    print("Minimal value for Akaike is : :", min(lf_min))
 
 def chunks(l, n):
     n = max(1, n)
@@ -176,4 +176,5 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,data
 
 # simple_graphics(y)
 # test_stationarity(y)
+#y2 = pd.DataFrame(getData("../data/log_mercredi.csv"))
 #hyperparameters_optimization(y2, 5)
