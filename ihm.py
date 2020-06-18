@@ -108,8 +108,8 @@ def boutonFourreTout():
 # On crée une fenêtre, racine de notre interface
 fenetre = tk.Tk()
 fenetre.title('Simulation')
-fenetre.maxsize(1300, 700)
-fenetre.minsize(1300, 700)
+fenetre.maxsize(1800, 900)
+fenetre.minsize(1800, 900)
 fenetre['bg'] = 'white'
 
 Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)

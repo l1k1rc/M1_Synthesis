@@ -66,6 +66,13 @@ usage()
     echo "  ${BOLD}--add-vlan${END}                             Create two vlans "
    #echo "  ${BOLD}--delete-vlan${END}                          Delete two vlans "
     echo
+	echo "Examples :"
+	echo
+	echo "  ./main.bash --enable-poe-port 4 "
+	echo "  ./main.bash --disable-poe-port 7 "
+	echo "  ./main.bash --add-vlan 20,21 --names connected_vlan,disconnected_vlan "
+	echo "  ./main.bash --add-vlan 20,21 -n connected_vlan,disconnected_vlan "
+	echo
 }
 
 ##################################################
@@ -190,8 +197,10 @@ if [[ $INTERACTIVEMODE -eq 0 ]]; then
 	    	;;
         $ENABLEPOEPORT)
             if [[ "$PORT" -ge "1" && "$PORT" -le "12" ]]; then
-			   	echo "expect enable_poe_port $PORT"
-				expect enable_poe_port $PORT
+			   	#echo "expect enable_poe_port $PORT"
+				#expect enable_poe_port $PORT
+			   	echo "expect enable_poe_port_switch_simulation.expect $PORT"
+				expect enable_poe_port_switch_simulation.expect $PORT
 			elif [[ "$PORT" -eq "0" ]]; then
 				echo "expect enable_poe_port"
 				expect enable_poe_port
@@ -201,8 +210,10 @@ if [[ $INTERACTIVEMODE -eq 0 ]]; then
 	    	;;
         $DISABLEPOEPORT)
             if [[ "$PORT" -ge "1" && "$PORT" -le "12" ]]; then
-			   	echo "expect disable_poe_port $PORT"
-			   	expect disable_poe_port $PORT
+			   	#echo "expect disable_poe_port $PORT"
+			   	#expect disable_poe_port $PORT
+			   	echo "expect disable_poe_port_switch_simulation.expect $PORT"
+				expect disable_poe_port_switch_simulation.expect $PORT
 			elif [[ "$PORT" -eq "0" ]]; then
 				echo "expect disable_poe_port"
 				expect disable_poe_port
@@ -279,8 +290,10 @@ Which port would you enable (between 1 and 12) ?
 (0) Will enable every ports"
 			   read
 			   if [[ "$REPLY" -ge "1" && "$REPLY" -le "12" ]]; then
-				   echo "expect enable_poe_port $REPLY"
-				   expect enable_poe_port $REPLY
+				   #echo "expect enable_poe_port $REPLY"
+				   #expect enable_poe_port $REPLY
+				   echo "expect enable_poe_port_switch_simulation.expect $REPLY"
+				   expect enable_poe_port_switch_simulation.expect $REPLY
 			   elif [[ "$REPLY" -eq "0" ]]; then
 				   echo "expect enable_poe_port"
 				   expect enable_poe_port
@@ -293,8 +306,10 @@ Which port would you disable (between 1 and 12) ?
 (0) Will disable every ports"
 			   read
 			   if [[ "$REPLY" -ge "1" && "$REPLY" -le "12" ]]; then
-				   echo "expect disable_poe_port $REPLY"
-				   expect disable_poe_port $REPLY
+				   #echo "expect disable_poe_port $REPLY"
+				   #expect disable_poe_port $REPLY
+				   echo "expect disable_poe_port_switch_simulation.expect $REPLY"
+				   expect disable_poe_port_switch_simulation.expect $REPLY
 			   elif [[ "$REPLY" -eq "0" ]]; then
 				   echo "expect disable_poe_port"
 				   expect disable_poe_port
@@ -302,16 +317,16 @@ Which port would you disable (between 1 and 12) ?
 				   echo "Wrong entry..."
 			   fi
 				;;
-			7) echo "Which vlan number would you assign to connected area ?"
+			7) echo "Which vlan number would you assign to the connected area ?"
 			   read
 			   connected_area=$REPLY
-			   echo "Which name would you assign to connected area ?"
+			   echo "Which name would you assign to the connected area ?"
 			   read
 			   connected_name=$REPLY
-			   echo "Which vlan number would you assign to disconnected area ?" 
+			   echo "Which vlan number would you assign to the disconnected area ?" 
 			   read
 			   disconnected_area=$REPLY
-			   echo "Which name would you assign to disconnected area ?"
+			   echo "Which name would you assign to the disconnected area ?"
 			   read
 			   disconnected_name=$REPLY
                if [[ "$connected_area" -gt "99" || "$connected_area" -lt "0" || "$disconnected_area" -gt "99" || "$disconnected_area" -lt "0" || -z $connected_name || -z $disconnected_name ]]; then

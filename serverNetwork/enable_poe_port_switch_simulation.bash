@@ -12,23 +12,11 @@ echo ">(config)#"
  
 read $REPLY
 sleep 3
-echo ">(config-vlan)#"
+echo ">(config-if)#"
 
 read $REPLY
 sleep 3
-echo ">(config-vlan)#"
- 
-read $REPLY
-sleep 3
-echo ">(config)#"
- 
-read $REPLY
-sleep 3
-echo ">(config-vlan)#"
- 
-read $REPLY
-sleep 3
-echo ">(config-vlan)#"
+echo ">(config-if)#"
  
 read $REPLY
 sleep 3
