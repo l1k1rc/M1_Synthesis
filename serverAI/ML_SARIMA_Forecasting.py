@@ -7,9 +7,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import xml
 from statsmodels.tsa.stattools import adfuller
+from xml.dom import minidom
 
 plt.style.use('fivethirtyeight')
+
 
 def getData(filename):
     list_daf = []
@@ -21,6 +24,7 @@ def getData(filename):
 
     print(ts)
     return ts
+
 
 '''
 Methode which just display data inside graphics.
@@ -100,15 +104,19 @@ def hyperparameters_optimization(data,
                 continue
     print("Minimal value for Akaike is : :", min(lf_min))
 
+
 def chunks(l, n):
     n = max(1, n)
     return (l[i:i + n] for i in range(0, len(l), n))
+
 
 '''
 Allows to test a series on its stationarity with the Dickey-fuller test based
 on a p-value parameter. If this parameter is small, i.e. less than 0.05, then 
 the series is stationary.
 '''
+
+
 def test_stationarity(data):
     # Determing rolling statistics
     rolmean = pd.rolling_mean(data, window=12)
@@ -137,7 +145,7 @@ This method build a plot to show the prediction values and get them to send to a
 '''
 
 
-def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,dataName,day):
+def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted, dataName, day):
     # Hyperparameters given by their optimization from grid-searching done before
     # for each value : p,d,q and P,D,Q,m
     res = sm.tsa.statespace.SARIMAX(data,
@@ -164,17 +172,58 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,data
     ax.set_xlabel('Per hour', fontsize=18)
     ax.set_ylabel(dataName, fontsize=18)
     plt.legend(loc='upper left', prop={'size': 20})
-    plt.title('Prediction SARIMA '+day, fontsize=22, fontweight="bold")
-    #For the execution from the IDE
-    #plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
-    #For the execution from the terminal
+    plt.title('Prediction SARIMA ' + day, fontsize=22, fontweight="bold")
+    # For the execution from the IDE
+    # plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
+    # For the execution from the terminal
     plt.savefig('data/Prediction_' + dataName + '_for_' + day + '.png')
-    #plt.show()
+    # plt.show()
     line = ax.lines[1]
     return line.get_ydata()
 
 
+"""
+Allows you to save the parameters used for the model 
+in order to reuse them in the visualization wizard.
+"""
+
+
+def writeConfiguration(file, p, d, q, P, D, Q, m, season):
+    import xml.etree.cElementTree as ET
+
+    root = ET.Element("root")
+    doc = ET.SubElement(root, "doc")
+
+    ET.SubElement(doc, "field", name="autoregression_trend").text = str(p)
+    ET.SubElement(doc, "field", name="order_diff_trend").text = str(d)
+    ET.SubElement(doc, "field", name="mobile_av_trend").text = str(q)
+    ET.SubElement(doc, "field", name="autoregression_seas").text = str(P)
+    ET.SubElement(doc, "field", name="order_diff_seas").text = str(D)
+    ET.SubElement(doc, "field", name="mobile_av_seas").text = str(Q)
+    ET.SubElement(doc, "field", name="period").text = str(m)
+    ET.SubElement(doc, "field", name="season").text = str(season)
+    tree = ET.ElementTree(root)
+
+    tree.write(file)
+    xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
+
+    with open(file, "w") as f:
+        f.write(xmlstr)
+
+def readConf(document):
+  for child in document.childNodes:
+    if child.nodeType == child.TEXT_NODE:
+      if document.tagName == 'field':
+        print(child.data)
+    if child.nodeType == xml.dom.Node.ELEMENT_NODE:
+      readConf(child)
+
+filename = 'data/conf.xml'
+dom = xml.dom.minidom.parse(filename)
+readConf(dom.documentElement)
+
+#writeConfiguration("../data/conf.xml", 1, 1, 1, 0, 1, 1, 24, 120)
 # simple_graphics(y)
 # test_stationarity(y)
-#y2 = pd.DataFrame(getData("../data/log_mercredi.csv"))
-#hyperparameters_optimization(y2, 5)
+# y2 = pd.DataFrame(getData("../data/log_mercredi.csv"))
+# hyperparameters_optimization(y2, 5)

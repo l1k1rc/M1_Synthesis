@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<root>
+   <doc>
+      <field name="autoregression_trend">1</field>
+      <field name="order_diff_trend">1</field>
+      <field name="mobile_av_trend">1</field>
+      <field name="autoregression_seas">0</field>
+      <field name="order_diff_seas">1</field>
+      <field name="mobile_av_seas">1</field>
+      <field name="period">24</field>
+      <field name="season">120</field>
+   </doc>
+</root>
