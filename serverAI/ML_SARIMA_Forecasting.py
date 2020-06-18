@@ -90,7 +90,7 @@ def hyperparameters_optimization(data,
                 mod = sm.tsa.statespace.SARIMAX(data, order=param, seasonal_order=param_seasonal,
                                                 enforce_stationarity=False, enforce_invertibility=False)
                 results = mod.fit(disp=0)
-                print('ARIMA{}x{}24 - AIC:{}'.format(param, param_seasonal, results.aic))
+                print('SARIMA{}x{}24 - AIC:{}'.format(param, param_seasonal, results.aic))
                 lf_min.append(results.aic)
                 timer.stop()
                 print('Total time in seconds for first call:', timer.interval)
