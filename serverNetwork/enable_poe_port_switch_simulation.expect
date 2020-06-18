@@ -31,13 +31,13 @@ if { $port_nbr > 0 } {
 	send "interface gi1/0/$port_nbr\r"
 	expect "*(config-if)#"
 	puts -nonewline "\033\[1;32m"; #GREEN
-	puts "\nEnabeling poe port $port_nbr..."
+	puts "\Activation of the poe port $port_nbr..."
     puts "\033\[0m"; #Reset
 	send "no shutdown\r"
 	expect "*(config-if)#"
 } else {
 	puts -nonewline "\033\[1;32m"; #GREEN
-	puts "\nEnabeling every poe ports..."
+	puts "\nActivation of every poe ports..."
 	puts "\033\[0m"; #Reset
 	for {set x 1} {$x<13} {incr x 1} {
 		send "interface gi1/0/$x\r"
