@@ -28,7 +28,7 @@ class Style:
 Main program for calling methods for prediction and build objects.
 '''
 if __name__ == '__main__':
-    if sys.argv[1] == "-h":
+    if len(sys.argv) == 2:
         print("The model used for this solution uses a learning process. Please \nfill in the CSV file names in the "
               "following order:\nnumber of clients and bandwidth. \n" + Style.UNDERLINE + "Usage" + Style.ENDC + " : python3 -m ["
                                                                                                                  "nbClientCSV] ["
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     warnings.filterwarnings("ignore")
     # SARIMA = #, #, p, d ,q, P, D, Q, seasonal_length
     # Retrieve data from logs files
-    day = "Monday"
+    day = "Monday" # define what data for what day
     # For the execution from the IDE
     # y = pd.DataFrame(getData("../data/log_lundi.csv"))
     # y2 = pd.DataFrame(getData("../data/log_lundi_bw.csv"))
@@ -62,6 +62,10 @@ if __name__ == '__main__':
     data_bandwidth = ia.build_forecast(y2, 120, 0, 1, 1, 0, 1, 1, 24, "Bandwidth_Mo.s", day)
     data_per_day = np.array_split(data_nbClient, 5)
     data_per_day2 = np.array_split(data_bandwidth, 5)
+    df_client = pd.DataFrame(abs(data_per_day[4]))
+    df_bandwidth = pd.DataFrame(abs(data_per_day2[4]))
+    df_client.to_csv('data/estimated_client_'+day+'.csv')
+    df_bandwidth.to_csv('data/estimated_bandwidth_'+day+'.csv')
     print(Style.OKBLUE + "Estimated data found for CLIENT :" + str(abs(data_per_day[4])) + Style.ENDC)
     print(Style.HEADER + "Estimated data found for BANDWIDTH :" + str(abs(data_per_day2[4])) + Style.ENDC)
     # hyperparameters_optimization(y2, 2)
@@ -75,7 +79,9 @@ if __name__ == '__main__':
                                        "following folder : : " + path + repn + Style.ENDC+"\n")
     # print(forecast.daysD["Monday"].get_frct_nbClient(13))  # +1h
     # print(forecast.daysD[day].toString())
-    if sys.argv[3]=="1":
-        os.system('python3 ihm.py')
-    else:
-        sys.exit(1)
+
+    if len(sys.argv)==3:
+        if sys.argv[3]=="1":
+            os.system('python3 ihm.py')
+        else:
+            sys.exit(1)

@@ -22,7 +22,7 @@ class Interval:
 
     def build(self):
         for i in range(1, self.ap+1):
-            print("Minumum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
+            print("Minimum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
             print("Maximum value nb_ap : " + str(i) + " expected value :" + str(self.maxIter * i))
             self.listOfSegment.append(P.open(self.maxIter * (i - 1), self.maxIter * i))
         print(self.listOfSegment)

@@ -168,7 +168,7 @@ def build_forecast(data, train_duration, p, d, q, P, D, Q, length_predicted,data
     #For the execution from the IDE
     #plt.savefig('../data/Prediction_'+dataName+'_for_'+day+'.png')
     #For the execution from the terminal
-    plt.savefig('Prediction_' + dataName + '_for_' + day + '.png')
+    plt.savefig('data/Prediction_' + dataName + '_for_' + day + '.png')
     #plt.show()
     line = ax.lines[1]
     return line.get_ydata()

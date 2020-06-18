@@ -75,7 +75,7 @@ class Forecasting:
         #For the execution from the IDE
         #plt.savefig('../data/Prediction_Result_for_' + days_ + '.png')
         #For the execution from the terminal
-        plt.savefig('Prediction_Result_for_' + days_ + '.png')
+        plt.savefig('data/Prediction_Result_for_' + days_ + '.png')
         #plt.show()
 
 
