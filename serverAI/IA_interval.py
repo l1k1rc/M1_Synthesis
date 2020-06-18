@@ -22,12 +22,13 @@ class Interval:
 
     def build(self):
         for i in range(1, self.ap+1):
-            print("Minumum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
+            print("Minimum value nb_ap : "+str(i)+" expected value :" + str(self.maxIter * (i - 1)))
             print("Maximum value nb_ap : " + str(i) + " expected value :" + str(self.maxIter * i))
             self.listOfSegment.append(P.open(self.maxIter * (i - 1), self.maxIter * i))
         print(self.listOfSegment)
 
     def config(self):
+        print("============Heuristics============\n")
         self.maxIter = 0.6 * self.client + 0.4 * self.bandwidth
         print("Segment created : l = " + str(self.maxIter))
 

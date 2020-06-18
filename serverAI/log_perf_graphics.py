@@ -45,4 +45,4 @@ def retrieveCSV(file, max):
     plt.savefig("../data/log_performance.png")
     plt.show()
 
-retrieveCSV("log_perf.log", 200)
+retrieveCSV("../data/log_perf.log", 200)
