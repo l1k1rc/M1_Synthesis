@@ -28,6 +28,7 @@ class Interval:
         print(self.listOfSegment)
 
     def config(self):
+        print("============Heuristics============\n")
         self.maxIter = 0.6 * self.client + 0.4 * self.bandwidth
         print("Segment created : l = " + str(self.maxIter))
 
